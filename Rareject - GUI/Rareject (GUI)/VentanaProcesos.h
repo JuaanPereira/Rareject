@@ -26,6 +26,8 @@ namespace RarejectGUI {
 		{
 			InitializeComponent();
 
+			listaProcesos->Items->Add(String::Format("{0,-6} {1, 30}", "PID", "Nombre")); //Damos formato inicial a la lista
+
 			HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); /*Creamos snapshot de los procesos activos actualmente*/
 			PROCESSENTRY32* processInfo = new PROCESSENTRY32;
 
@@ -37,9 +39,10 @@ namespace RarejectGUI {
 
 				int ID_Proceso = processInfo->th32ProcessID;
 
-				String Nombre = processInfo->szExeFile;
+				WCHAR* PName = processInfo->szExeFile;
+				String^ Nombre = gcnew String(PName);
 
-				listaProcesos->Items->Add("- PID: " + ID_Proceso + "- Nombre: " + Nombre);
+				listaProcesos->Items->Add(String::Format("{0,-6} {1,30}", ID_Proceso, Nombre));
 
 			}
 		}
@@ -88,9 +91,9 @@ namespace RarejectGUI {
 			// listaProcesos
 			// 
 			this->listaProcesos->FormattingEnabled = true;
-			this->listaProcesos->Location = System::Drawing::Point(158, 12);
+			this->listaProcesos->Location = System::Drawing::Point(-1, -1);
 			this->listaProcesos->Name = L"listaProcesos";
-			this->listaProcesos->Size = System::Drawing::Size(95, 238);
+			this->listaProcesos->Size = System::Drawing::Size(286, 264);
 			this->listaProcesos->TabIndex = 0;
 			this->listaProcesos->SelectedIndexChanged += gcnew System::EventHandler(this, &VentanaProcesos::listaProcesos_SelectedIndexChanged);
 			// 
