@@ -5,6 +5,9 @@
 #include <Psapi.h>
 #include <Tlhelp32.h>
 #include <list>
+#include <string>
+
+static int processID;
 
 namespace RarejectGUI {
 
@@ -26,7 +29,7 @@ namespace RarejectGUI {
 		{
 			InitializeComponent();
 
-			listaProcesos->Items->Add(String::Format("{0,-6} {1, 30}", "PID", "Nombre")); //Damos formato inicial a la lista
+			listaProcesos->Items->Add(String::Format("{0,0} {1, 10}", "PID", "Nombre")); //Damos formato inicial a la lista
 
 			HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); /*Creamos snapshot de los procesos activos actualmente*/
 			PROCESSENTRY32* processInfo = new PROCESSENTRY32;
@@ -36,14 +39,12 @@ namespace RarejectGUI {
 
 			while (Process32Next(hSnapShot, processInfo) != FALSE)
 			{
+				int pid = processInfo->th32ProcessID;
+				String^ name = gcnew String(processInfo->szExeFile);
 
-				int ID_Proceso = processInfo->th32ProcessID;
+				String^ processinfo = pid + " (" + name + ")";
 
-				WCHAR* PName = processInfo->szExeFile;
-				String^ Nombre = gcnew String(PName);
-
-				listaProcesos->Items->Add(String::Format("{0,-6} {1,30}", ID_Proceso, Nombre));
-
+				listaProcesos->Items->Add(processinfo);
 			}
 		}
 
@@ -135,9 +136,11 @@ namespace RarejectGUI {
 		}
 
 	private: System::Void listaProcesos_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
-	
-		textBox1->Text = listaProcesos->GetItemText(listaProcesos->SelectedItem);
-	
+		String^ process = listaProcesos->GetItemText(listaProcesos->SelectedItem); 
+		array<String^>^ processinfo = process->Split(' ');
+		
+		textBox1->Text = processinfo[1]->Substring(1, (processinfo[1]->Length - 2)) + " (" + processinfo[0] + ")";
+		processID = System::Convert::ToInt32(processinfo[0]);
 	}
 
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
