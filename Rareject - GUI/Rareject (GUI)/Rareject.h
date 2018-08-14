@@ -87,7 +87,6 @@ namespace RarejectGUI {
 			this->label1->Size = System::Drawing::Size(78, 13);
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"Realizado por :";
-			this->label1->Click += gcnew System::EventHandler(this, &Rareject::label1_Click);
 			// 
 			// label2
 			// 
@@ -125,7 +124,6 @@ namespace RarejectGUI {
 			this->label4->Size = System::Drawing::Size(31, 13);
 			this->label4->TabIndex = 4;
 			this->label4->Text = L"PID :";
-			this->label4->Click += gcnew System::EventHandler(this, &Rareject::label4_Click);
 			// 
 			// label5
 			// 
@@ -144,7 +142,6 @@ namespace RarejectGUI {
 			this->txtRuta->Size = System::Drawing::Size(204, 20);
 			this->txtRuta->TabIndex = 6;
 			this->txtRuta->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->txtRuta->TextChanged += gcnew System::EventHandler(this, &Rareject::txtRuta_TextChanged);
 			// 
 			// btnBuscar
 			// 
@@ -160,7 +157,6 @@ namespace RarejectGUI {
 			// 
 			this->openFileDialog1->DefaultExt = L"dll";
 			this->openFileDialog1->Filter = L"Biblioteca dinámica (*.dll)|*.dll";
-			this->openFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &Rareject::openFileDialog1_FileOk);
 			// 
 			// button3
 			// 
@@ -221,13 +217,5 @@ namespace RarejectGUI {
 				txtRuta->Text = openFileDialog1->FileName;
 			}
 		}
-	private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
-	}
-private: System::Void txtRuta_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void label4_Click(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) {
-}
 };
 }

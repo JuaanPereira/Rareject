@@ -29,8 +29,6 @@ namespace RarejectGUI {
 		{
 			InitializeComponent();
 
-			listaProcesos->Items->Add(String::Format("{0,0} {1, 10}", "PID", "Nombre")); //Damos formato inicial a la lista
-
 			HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); /*Creamos snapshot de los procesos activos actualmente*/
 			PROCESSENTRY32* processInfo = new PROCESSENTRY32;
 
@@ -62,6 +60,8 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::ListBox^  listaProcesos;
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::TextBox^  textBox1;
+	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::Label^  label2;
 
 	protected:
 
@@ -91,12 +91,14 @@ namespace RarejectGUI {
 			this->listaProcesos = (gcnew System::Windows::Forms::ListBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
 			// 
 			// listaProcesos
 			// 
 			this->listaProcesos->FormattingEnabled = true;
-			this->listaProcesos->Location = System::Drawing::Point(26, 12);
+			this->listaProcesos->Location = System::Drawing::Point(26, 22);
 			this->listaProcesos->Name = L"listaProcesos";
 			this->listaProcesos->Size = System::Drawing::Size(221, 147);
 			this->listaProcesos->TabIndex = 0;
@@ -115,16 +117,37 @@ namespace RarejectGUI {
 			// textBox1
 			// 
 			this->textBox1->Location = System::Drawing::Point(26, 188);
-			this->textBox1->Name = L"txtPID_NOMBRE";
+			this->textBox1->Name = L"textBox1";
 			this->textBox1->Size = System::Drawing::Size(221, 20);
 			this->textBox1->TabIndex = 2;
 			this->textBox1->TextChanged += gcnew System::EventHandler(this, &VentanaProcesos::textBox1_TextChanged);
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(23, 7);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(25, 13);
+			this->label1->TabIndex = 3;
+			this->label1->Text = L"PID";
+			this->label1->Click += gcnew System::EventHandler(this, &VentanaProcesos::label1_Click);
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Location = System::Drawing::Point(54, 7);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(102, 13);
+			this->label2->TabIndex = 4;
+			this->label2->Text = L"Nombre del proceso";
 			// 
 			// VentanaProcesos
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(284, 261);
+			this->Controls->Add(this->label2);
+			this->Controls->Add(this->label1);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->listaProcesos);
@@ -146,6 +169,8 @@ namespace RarejectGUI {
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 	}
 private: System::Void textBox1_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) {
 }
 };
 }
