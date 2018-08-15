@@ -2,6 +2,7 @@
 
 #include "VentanaProcesos.h"
 #include <msclr\marshal.h>
+#include <stdio.h>
 
 namespace RarejectGUI {
 
@@ -12,6 +13,7 @@ namespace RarejectGUI {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace msclr::interop;
+	using namespace std;
 
 	public ref class Rareject : public System::Windows::Forms::Form
 	{
@@ -43,7 +45,7 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::LinkLabel^  linkLabel1;
 	private: System::Windows::Forms::Button^  button1;
-	private: System::Windows::Forms::Button^  btntest;
+
 
 	protected:
 
@@ -78,7 +80,6 @@ namespace RarejectGUI {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->linkLabel1 = (gcnew System::Windows::Forms::LinkLabel());
 			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->btntest = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// btnProcesos
@@ -208,16 +209,6 @@ namespace RarejectGUI {
 			this->button1->UseVisualStyleBackColor = false;
 			this->button1->Click += gcnew System::EventHandler(this, &Rareject::button1_Click);
 			// 
-			// btntest
-			// 
-			this->btntest->Location = System::Drawing::Point(182, 131);
-			this->btntest->Name = L"btntest";
-			this->btntest->Size = System::Drawing::Size(75, 23);
-			this->btntest->TabIndex = 14;
-			this->btntest->Text = L"btntest";
-			this->btntest->UseVisualStyleBackColor = true;
-			this->btntest->Click += gcnew System::EventHandler(this, &Rareject::btntest_Click);
-			// 
 			// Rareject
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -225,7 +216,6 @@ namespace RarejectGUI {
 			this->BackColor = System::Drawing::SystemColors::MenuHighlight;
 			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
 			this->ClientSize = System::Drawing::Size(300, 316);
-			this->Controls->Add(this->btntest);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->linkLabel1);
 			this->Controls->Add(this->label1);
@@ -279,9 +269,9 @@ namespace RarejectGUI {
 
 		private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
 			
-			//marshal_context^ context = gcnew marshal_context();
+			marshal_context^ context = gcnew marshal_context();
 			DWORD PID = System::Convert::ToInt32(textBox1->Text);
-			//const char* ruta = context->marshal_as<const char*>(txtRuta->Text);
+			const char* ruta = context->marshal_as<const char*>(txtRuta->Text);
 
 			
 
@@ -295,10 +285,10 @@ namespace RarejectGUI {
 				LPVOID LoadLibraryAddress = (LPVOID)GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
 
 				/* Asignamos la memoria suficiente en el proceso para poder "soportar" el tamaño total de la ruta donde se encuentre el DLL */
-				LPVOID ResMemDLL = VirtualAllocEx(Proceso, NULL, strlen(txtRuta->Text->ToString), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+				LPVOID ResMemDLL = VirtualAllocEx(Proceso, NULL, strlen(ruta), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 
 				/* Escribimos la ruta del DLL en la memoria del proceso */
-				WriteProcessMemory(Proceso, ResMemDLL, txtRuta->Text->ToString, strlen(txtRuta->Text->ToString), NULL);
+				WriteProcessMemory(Proceso, ResMemDLL, &ruta, strlen(ruta), NULL);
 
 				/*  Creamos un hilo remoto el cual empezará en la dirección de memoria del proceso asignada anteriormente, */
 				HANDLE HiloRemoto = CreateRemoteThread(Proceso, NULL, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryAddress, ResMemDLL, 0, NULL);
@@ -307,7 +297,7 @@ namespace RarejectGUI {
 				WaitForSingleObject(HiloRemoto, INFINITE);
 
 				/* Liberamos la memoria */
-				VirtualFreeEx(Proceso, ResMemDLL, strlen(txtRuta->Text->ToString), MEM_RELEASE); 
+				VirtualFreeEx(Proceso, ResMemDLL, strlen(ruta), MEM_RELEASE); 
 
 				CloseHandle(HiloRemoto);
 				CloseHandle(Proceso);
@@ -323,15 +313,6 @@ private: System::Void label4_Click(System::Object^  sender, System::EventArgs^  
 private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 
 	this->Close();
-
-}
-private: System::Void btntest_Click(System::Object^  sender, System::EventArgs^  e) {
-
-	marshal_context^ context = gcnew marshal_context();
-	const char* ruta = context->marshal_as<const char*>(txtRuta->Text);
-
-	txtRuta->Text = System::Convert::ToString(ruta);
-
 
 }
 };

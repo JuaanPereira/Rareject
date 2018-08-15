@@ -267,9 +267,9 @@ namespace RarejectGUI {
 	private: System::Void listaProcesos_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 
 		String^ process = listaProcesos->GetItemText(listaProcesos->SelectedItem);
-		array<String^>^ processinfo = process->Split(' ');
+		array<String^>^ processinfo = process->Split(' ');	//Separa la información del proceso en varias cadenas de texto
 
-		textBox1->Text = processinfo[1]->Substring(1, (processinfo[1]->Length - 2)) + " (" + processinfo[0] + ")";
+		textBox1->Text = processinfo[1]->Substring(1, (processinfo[1]->Length - 2)) + " (" + processinfo[0] + ")";	//Modifica la visualización de la información del proceso
 		processID = System::Convert::ToInt32(processinfo[0]);
 
 	}
