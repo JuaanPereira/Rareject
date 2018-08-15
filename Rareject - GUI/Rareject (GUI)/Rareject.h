@@ -1,5 +1,6 @@
 #pragma once
 #include "VentanaProcesos.h"
+#include <msclr\marshal.h>
 
 namespace RarejectGUI {
 
@@ -9,6 +10,7 @@ namespace RarejectGUI {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace msclr::interop;
 
 	/// <summary>
 	/// Resumen de MyForm
@@ -46,10 +48,11 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
 	private: System::Windows::Forms::Button^  button3;
 	private: System::Windows::Forms::TextBox^  textBox1;
-	private: System::Windows::Forms::Button^  button1;
+
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::LinkLabel^  linkLabel1;
-	private: System::Windows::Forms::Button^  button2;
+	private: System::Windows::Forms::Button^  button1;
+
 
 	protected:
 
@@ -75,10 +78,9 @@ namespace RarejectGUI {
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->linkLabel1 = (gcnew System::Windows::Forms::LinkLabel());
-			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// btnProcesos
@@ -167,22 +169,9 @@ namespace RarejectGUI {
 			this->textBox1->Enabled = false;
 			this->textBox1->Location = System::Drawing::Point(83, 128);
 			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(46, 20);
+			this->textBox1->Size = System::Drawing::Size(61, 20);
 			this->textBox1->TabIndex = 9;
 			this->textBox1->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			// 
-			// button1
-			// 
-			this->button1->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button1.BackgroundImage")));
-			this->button1->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
-			this->button1->ForeColor = System::Drawing::Color::Cyan;
-			this->button1->Location = System::Drawing::Point(152, 126);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(135, 23);
-			this->button1->TabIndex = 10;
-			this->button1->Text = L"Asignar proceso buscado";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &Rareject::button1_Click);
 			// 
 			// label1
 			// 
@@ -210,16 +199,16 @@ namespace RarejectGUI {
 			this->linkLabel1->TabStop = true;
 			this->linkLabel1->Text = L"https://github.com/JuanPabloPereiraCaro/Rareject";
 			// 
-			// button2
+			// button1
 			// 
-			this->button2->BackColor = System::Drawing::SystemColors::MenuText;
-			this->button2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button2.Image")));
-			this->button2->Location = System::Drawing::Point(182, 184);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(75, 67);
-			this->button2->TabIndex = 13;
-			this->button2->UseVisualStyleBackColor = false;
-			this->button2->Click += gcnew System::EventHandler(this, &Rareject::button2_Click);
+			this->button1->BackColor = System::Drawing::SystemColors::MenuText;
+			this->button1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button1.Image")));
+			this->button1->Location = System::Drawing::Point(182, 184);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(75, 67);
+			this->button1->TabIndex = 13;
+			this->button1->UseVisualStyleBackColor = false;
+			this->button1->Click += gcnew System::EventHandler(this, &Rareject::button1_Click);
 			// 
 			// Rareject
 			// 
@@ -228,10 +217,9 @@ namespace RarejectGUI {
 			this->BackColor = System::Drawing::SystemColors::MenuHighlight;
 			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
 			this->ClientSize = System::Drawing::Size(300, 316);
-			this->Controls->Add(this->button2);
+			this->Controls->Add(this->button1);
 			this->Controls->Add(this->linkLabel1);
 			this->Controls->Add(this->label1);
-			this->Controls->Add(this->button1);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->btnBuscar);
@@ -258,7 +246,7 @@ namespace RarejectGUI {
 
 		private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e) {
 
-			Vent_Proc = gcnew VentanaProcesos();
+			Vent_Proc = gcnew VentanaProcesos(textBox1);
 
 		}
 
@@ -281,7 +269,41 @@ namespace RarejectGUI {
 		}
 
 		private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
+			marshal_context^ context = gcnew marshal_context();
+			DWORD PID = System::Convert::ToInt32(textBox1->Text);
+			const char* ruta = context->marshal_as<const char*>(txtRuta->Text);
 
+			HANDLE Proceso = OpenProcess(PROCESS_ALL_ACCESS, false, PID); /*Obtenemos y almacenamos en la variable Proceso el "process handle" (valor entero que identifica un proceso en Windows)*/
+
+			while (Proceso) { /* Mientras exista el Proceso... */
+
+				/* Para inyectar una biblioteca dinámica en un proceso utilizaremos la función "LoadLibrary", LoadLibrary carga un módulo especificado
+				en el espacio de direcciones del proceso que deseemos, nuestro objetivo es asignar la suficiente memoria en el espacio de direcciones
+				del proceso que soporte cargar la ruta de la DLL que queremos inyectar en dicho proceso. */
+				LPVOID LoadLibraryAddress = (LPVOID)GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+
+				/* Asignamos la memoria suficiente en el proceso para poder "soportar" el tamaño total de la ruta donde se encuentre el DLL */
+				LPVOID ResMemDLL = VirtualAllocEx(Proceso, NULL, strlen(ruta), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+
+				/* Escribimos la ruta del DLL en la memoria del proceso */
+				WriteProcessMemory(Proceso, ResMemDLL, ruta, strlen(ruta), NULL);
+
+				/*  Creamos un hilo remoto el cual empezará en la dirección de memoria del proceso asignada anteriormente, */
+				HANDLE HiloRemoto = CreateRemoteThread(Proceso, NULL, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryAddress, ResMemDLL, 0, NULL);
+
+				/* Esperamos por el hilo */
+				WaitForSingleObject(HiloRemoto, INFINITE);
+
+				/* Liberamos la memoria */
+				VirtualFreeEx(Proceso, ResMemDLL, strlen(ruta), MEM_RELEASE);
+
+				/* Cerramos los "handles" (un handle en informática es un tipo de puntero inteligente que hace referencia
+				a una región de memoria) */
+
+				CloseHandle(HiloRemoto);
+				CloseHandle(Proceso);
+
+			}
 
 		}
 private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
@@ -289,11 +311,6 @@ private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::Co
 private: System::Void label4_Click(System::Object^  sender, System::EventArgs^  e) {
 }
 private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
-	
-	textBox1->Text = System::Convert::ToString(processID);
-
-}
-private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
 
 	this->Close();
 

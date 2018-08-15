@@ -11,5 +11,4 @@ static int VentanaProcesos(array<String^>^ args) {
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
 	Application::Run(%RarejectGUI::VentanaProcesos());
-
 }

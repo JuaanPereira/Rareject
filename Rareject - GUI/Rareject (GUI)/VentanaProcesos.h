@@ -45,6 +45,28 @@ namespace RarejectGUI {
 				listaProcesos->Items->Add(processinfo);
 			}
 		}
+		VentanaProcesos(TextBox^ pidTextBox)
+		{
+			InitializeComponent(pidTextBox);
+
+			HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); /*Creamos snapshot de los procesos activos actualmente*/
+			PROCESSENTRY32* processInfo = new PROCESSENTRY32;
+
+			processInfo->dwSize = sizeof(PROCESSENTRY32);
+			int index = 0;
+
+			while (Process32Next(hSnapShot, processInfo) != FALSE)
+			{
+				int pid = processInfo->th32ProcessID;
+				String^ name = gcnew String(processInfo->szExeFile);
+
+				String^ processinfo = pid + " (" + name + ")";
+
+				listaProcesos->Items->Add(processinfo);
+			}
+		}
+
+		
 
 	protected:
 		/// <summary>
@@ -62,6 +84,7 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::TextBox^  textBox1;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::Label^  label2;
+	private: System::Windows::Forms::TextBox^ pidTextBox;
 
 	protected:
 
@@ -86,6 +109,7 @@ namespace RarejectGUI {
 		/// Método necesario para admitir el Diseñador. No se puede modificar
 		/// el contenido de este método con el editor de código.
 		/// </summary>
+		
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(VentanaProcesos::typeid));
@@ -94,6 +118,89 @@ namespace RarejectGUI {
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->SuspendLayout();
+			// 
+			// listaProcesos
+			// 
+			this->listaProcesos->BackColor = System::Drawing::SystemColors::WindowText;
+			this->listaProcesos->ForeColor = System::Drawing::Color::Cyan;
+			this->listaProcesos->FormattingEnabled = true;
+			this->listaProcesos->Location = System::Drawing::Point(26, 22);
+			this->listaProcesos->Name = L"listaProcesos";
+			this->listaProcesos->Size = System::Drawing::Size(221, 147);
+			this->listaProcesos->TabIndex = 0;
+			this->listaProcesos->SelectedIndexChanged += gcnew System::EventHandler(this, &VentanaProcesos::listaProcesos_SelectedIndexChanged);
+			// 
+			// button1
+			// 
+			this->button1->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
+			this->button1->ForeColor = System::Drawing::Color::Cyan;
+			this->button1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button1.Image")));
+			this->button1->Location = System::Drawing::Point(69, 226);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(139, 23);
+			this->button1->TabIndex = 1;
+			this->button1->Text = L"Finalizar";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &VentanaProcesos::button1_Click);
+			// 
+			// textBox1
+			// 
+			this->textBox1->Enabled = false;
+			this->textBox1->Location = System::Drawing::Point(26, 188);
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(221, 20);
+			this->textBox1->TabIndex = 2;
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->ForeColor = System::Drawing::Color::Cyan;
+			this->label1->Location = System::Drawing::Point(23, 7);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(25, 13);
+			this->label1->TabIndex = 3;
+			this->label1->Text = L"PID";
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->BackColor = System::Drawing::Color::Transparent;
+			this->label2->ForeColor = System::Drawing::Color::Cyan;
+			this->label2->Location = System::Drawing::Point(54, 7);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(102, 13);
+			this->label2->TabIndex = 4;
+			this->label2->Text = L"Nombre del proceso";
+			// 
+			// VentanaProcesos
+			// 
+			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->BackColor = System::Drawing::SystemColors::ActiveCaptionText;
+			this->ClientSize = System::Drawing::Size(277, 261);
+			this->Controls->Add(this->label2);
+			this->Controls->Add(this->label1);
+			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->button1);
+			this->Controls->Add(this->listaProcesos);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			this->Name = L"VentanaProcesos";
+			this->Text = L"Procesos activos...";
+			this->ResumeLayout(false);
+			this->PerformLayout();
+
+		}
+
+		void InitializeComponent(TextBox^ pidTextBox)
+		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(VentanaProcesos::typeid));
+			this->listaProcesos = (gcnew System::Windows::Forms::ListBox());
+			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->pidTextBox = pidTextBox;
 			this->SuspendLayout();
 			// 
 			// listaProcesos
@@ -181,7 +288,7 @@ namespace RarejectGUI {
 	}
 
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
-
+		pidTextBox->Text = System::Convert::ToString(processID);
 		this->Close();
 
 	}
