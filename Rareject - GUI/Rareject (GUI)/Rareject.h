@@ -2,7 +2,6 @@
 
 #include "VentanaProcesos.h"
 #include <msclr\marshal.h>
-#include <stdio.h>
 
 namespace RarejectGUI {
 
@@ -13,7 +12,6 @@ namespace RarejectGUI {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace msclr::interop;
-	using namespace std;
 
 	public ref class Rareject : public System::Windows::Forms::Form
 	{
@@ -268,41 +266,36 @@ namespace RarejectGUI {
 		}
 
 		private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
-			
 			marshal_context^ context = gcnew marshal_context();
 			DWORD PID = System::Convert::ToInt32(textBox1->Text);
-			const char* ruta = context->marshal_as<const char*>(txtRuta->Text);
+			const char *NOMBRE_DLL = context->marshal_as<const char*, String>(txtRuta->Text);
 
 			
 
 			HANDLE Proceso = OpenProcess(PROCESS_ALL_ACCESS, false, PID); /*Obtenemos y almacenamos en la variable Proceso el "process handle" (valor entero que identifica un proceso en Windows)*/
 
-			while (Proceso) { /* Mientras exista el Proceso... */
+			/* Para inyectar una biblioteca dinámica en un proceso utilizaremos la función "LoadLibrary", LoadLibrary carga un módulo especificado
+			en el espacio de direcciones del proceso que deseemos, nuestro objetivo es asignar la suficiente memoria en el espacio de direcciones
+			del proceso que soporte cargar la ruta de la DLL que queremos inyectar en dicho proceso. */
+			LPVOID LoadLibraryAddress = (LPVOID)GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA"); 	
 
-				/* Para inyectar una biblioteca dinámica en un proceso utilizaremos la función "LoadLibrary", LoadLibrary carga un módulo especificado
-				en el espacio de direcciones del proceso que deseemos, nuestro objetivo es asignar la suficiente memoria en el espacio de direcciones
-				del proceso que soporte cargar la ruta de la DLL que queremos inyectar en dicho proceso. */
-				LPVOID LoadLibraryAddress = (LPVOID)GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+			/* Asignamos la memoria suficiente en el proceso para poder "soportar" el tamaño total de la ruta donde se encuentre el DLL */
+			LPVOID ResMemDLL = VirtualAllocEx(Proceso, NULL, strlen(NOMBRE_DLL), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 
-				/* Asignamos la memoria suficiente en el proceso para poder "soportar" el tamaño total de la ruta donde se encuentre el DLL */
-				LPVOID ResMemDLL = VirtualAllocEx(Proceso, NULL, strlen(ruta), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+			/* Escribimos la ruta del DLL en la memoria del proceso */
+			WriteProcessMemory(Proceso, ResMemDLL, NOMBRE_DLL, strlen(NOMBRE_DLL), NULL);
+			
+			/*  Creamos un hilo remoto el cual empezará en la dirección de memoria del proceso asignada anteriormente, */
+			HANDLE HiloRemoto = CreateRemoteThread(Proceso, NULL, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryAddress, ResMemDLL, 0, NULL);
+			
+			/* Esperamos por el hilo */
+			WaitForSingleObject(HiloRemoto, INFINITE);
+			
+			/* Liberamos la memoria */
+			VirtualFreeEx(Proceso, ResMemDLL, strlen(NOMBRE_DLL), MEM_RELEASE); 
 
-				/* Escribimos la ruta del DLL en la memoria del proceso */
-				WriteProcessMemory(Proceso, ResMemDLL, &ruta, strlen(ruta), NULL);
-
-				/*  Creamos un hilo remoto el cual empezará en la dirección de memoria del proceso asignada anteriormente, */
-				HANDLE HiloRemoto = CreateRemoteThread(Proceso, NULL, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryAddress, ResMemDLL, 0, NULL);
-
-				/* Esperamos por el hilo */
-				WaitForSingleObject(HiloRemoto, INFINITE);
-
-				/* Liberamos la memoria */
-				VirtualFreeEx(Proceso, ResMemDLL, strlen(ruta), MEM_RELEASE); 
-
-				CloseHandle(HiloRemoto);
-				CloseHandle(Proceso);
-
-			}
+			CloseHandle(HiloRemoto);
+			CloseHandle(Proceso);
 
 		}
 
