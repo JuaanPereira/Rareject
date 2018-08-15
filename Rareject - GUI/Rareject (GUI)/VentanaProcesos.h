@@ -1,4 +1,5 @@
 #pragma once
+
 #include <sstream>
 #include <iostream>
 #include <Windows.h>
@@ -19,9 +20,6 @@ namespace RarejectGUI {
 	using namespace System::Drawing;
 	using namespace System::Diagnostics;
 
-	/// <summary>
-	/// Resumen de VentanaProcesos
-	/// </summary>
 	public ref class VentanaProcesos : public System::Windows::Forms::Form
 	{
 	public:
@@ -66,12 +64,7 @@ namespace RarejectGUI {
 			}
 		}
 
-		
-
 	protected:
-		/// <summary>
-		/// Limpiar los recursos que se estén usando.
-		/// </summary>
 		~VentanaProcesos()
 		{
 			if (components)
@@ -99,16 +92,10 @@ namespace RarejectGUI {
 	protected:
 
 	private:
-		/// <summary>
-		/// Variable del diseñador necesaria.
-		/// </summary>
+
 		System::ComponentModel::Container ^components;
 
 #pragma region Windows Form Designer generated code
-		/// <summary>
-		/// Método necesario para admitir el Diseñador. No se puede modificar
-		/// el contenido de este método con el editor de código.
-		/// </summary>
 		
 		void InitializeComponent(void)
 		{

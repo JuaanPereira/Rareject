@@ -1,4 +1,5 @@
 #pragma once
+
 #include "VentanaProcesos.h"
 #include <msclr\marshal.h>
 
@@ -12,24 +13,15 @@ namespace RarejectGUI {
 	using namespace System::Drawing;
 	using namespace msclr::interop;
 
-	/// <summary>
-	/// Resumen de MyForm
-	/// </summary>
 	public ref class Rareject : public System::Windows::Forms::Form
 	{
 	public:
 		Rareject(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: agregar código de constructor aquí
-			//
+		
 		}
-
 	protected:
-		/// <summary>
-		/// Limpiar los recursos que se estén usando.
-		/// </summary>
 		~Rareject()
 		{
 			if (components)
@@ -48,25 +40,30 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
 	private: System::Windows::Forms::Button^  button3;
 	private: System::Windows::Forms::TextBox^  textBox1;
-
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::LinkLabel^  linkLabel1;
 	private: System::Windows::Forms::Button^  button1;
+	private: System::Windows::Forms::Button^  btntest;
 
+	protected:
+
+	protected:
+
+	protected:
+
+	protected:
+
+	protected:
 
 	protected:
 
 	private:
-		/// <summary>
-		/// Variable del diseñador necesaria.
-		/// </summary>
+
 		System::ComponentModel::Container ^components;
 
 #pragma region Windows Form Designer generated code
-		/// <summary>
-		/// Método necesario para admitir el Diseñador. No se puede modificar
-		/// el contenido de este método con el editor de código.
-		/// </summary>
+		
+
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Rareject::typeid));
@@ -81,6 +78,7 @@ namespace RarejectGUI {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->linkLabel1 = (gcnew System::Windows::Forms::LinkLabel());
 			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->btntest = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// btnProcesos
@@ -210,6 +208,16 @@ namespace RarejectGUI {
 			this->button1->UseVisualStyleBackColor = false;
 			this->button1->Click += gcnew System::EventHandler(this, &Rareject::button1_Click);
 			// 
+			// btntest
+			// 
+			this->btntest->Location = System::Drawing::Point(182, 131);
+			this->btntest->Name = L"btntest";
+			this->btntest->Size = System::Drawing::Size(75, 23);
+			this->btntest->TabIndex = 14;
+			this->btntest->Text = L"btntest";
+			this->btntest->UseVisualStyleBackColor = true;
+			this->btntest->Click += gcnew System::EventHandler(this, &Rareject::btntest_Click);
+			// 
 			// Rareject
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -217,6 +225,7 @@ namespace RarejectGUI {
 			this->BackColor = System::Drawing::SystemColors::MenuHighlight;
 			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
 			this->ClientSize = System::Drawing::Size(300, 316);
+			this->Controls->Add(this->btntest);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->linkLabel1);
 			this->Controls->Add(this->label1);
@@ -269,9 +278,12 @@ namespace RarejectGUI {
 		}
 
 		private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
-			marshal_context^ context = gcnew marshal_context();
+			
+			//marshal_context^ context = gcnew marshal_context();
 			DWORD PID = System::Convert::ToInt32(textBox1->Text);
-			const char* ruta = context->marshal_as<const char*>(txtRuta->Text);
+			//const char* ruta = context->marshal_as<const char*>(txtRuta->Text);
+
+			
 
 			HANDLE Proceso = OpenProcess(PROCESS_ALL_ACCESS, false, PID); /*Obtenemos y almacenamos en la variable Proceso el "process handle" (valor entero que identifica un proceso en Windows)*/
 
@@ -283,10 +295,10 @@ namespace RarejectGUI {
 				LPVOID LoadLibraryAddress = (LPVOID)GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
 
 				/* Asignamos la memoria suficiente en el proceso para poder "soportar" el tamaño total de la ruta donde se encuentre el DLL */
-				LPVOID ResMemDLL = VirtualAllocEx(Proceso, NULL, strlen(ruta), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+				LPVOID ResMemDLL = VirtualAllocEx(Proceso, NULL, strlen(txtRuta->Text->ToString), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 
 				/* Escribimos la ruta del DLL en la memoria del proceso */
-				WriteProcessMemory(Proceso, ResMemDLL, ruta, strlen(ruta), NULL);
+				WriteProcessMemory(Proceso, ResMemDLL, txtRuta->Text->ToString, strlen(txtRuta->Text->ToString), NULL);
 
 				/*  Creamos un hilo remoto el cual empezará en la dirección de memoria del proceso asignada anteriormente, */
 				HANDLE HiloRemoto = CreateRemoteThread(Proceso, NULL, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryAddress, ResMemDLL, 0, NULL);
@@ -295,10 +307,7 @@ namespace RarejectGUI {
 				WaitForSingleObject(HiloRemoto, INFINITE);
 
 				/* Liberamos la memoria */
-				VirtualFreeEx(Proceso, ResMemDLL, strlen(ruta), MEM_RELEASE);
-
-				/* Cerramos los "handles" (un handle en informática es un tipo de puntero inteligente que hace referencia
-				a una región de memoria) */
+				VirtualFreeEx(Proceso, ResMemDLL, strlen(txtRuta->Text->ToString), MEM_RELEASE); 
 
 				CloseHandle(HiloRemoto);
 				CloseHandle(Proceso);
@@ -306,6 +315,7 @@ namespace RarejectGUI {
 			}
 
 		}
+
 private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
 }
 private: System::Void label4_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -313,6 +323,15 @@ private: System::Void label4_Click(System::Object^  sender, System::EventArgs^  
 private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 
 	this->Close();
+
+}
+private: System::Void btntest_Click(System::Object^  sender, System::EventArgs^  e) {
+
+	marshal_context^ context = gcnew marshal_context();
+	const char* ruta = context->marshal_as<const char*>(txtRuta->Text);
+
+	txtRuta->Text = System::Convert::ToString(ruta);
+
 
 }
 };
