@@ -4,7 +4,7 @@
 #include <msclr\marshal.h>
 
 namespace RarejectGUI {
-
+	
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -266,12 +266,12 @@ namespace RarejectGUI {
 		}
 
 		private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
+
 			marshal_context^ context = gcnew marshal_context();
 			DWORD PID = System::Convert::ToInt32(textBox1->Text);
 			const char *NOMBRE_DLL = context->marshal_as<const char*, String>(txtRuta->Text);
 
-			
-
+		
 			HANDLE Proceso = OpenProcess(PROCESS_ALL_ACCESS, false, PID); /*Obtenemos y almacenamos en la variable Proceso el "process handle" (valor entero que identifica un proceso en Windows)*/
 
 			/* Para inyectar una biblioteca dinámica en un proceso utilizaremos la función "LoadLibrary", LoadLibrary carga un módulo especificado
