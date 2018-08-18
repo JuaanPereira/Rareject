@@ -134,7 +134,7 @@ namespace RarejectGUI {
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::ActiveCaptionText;
-			this->ClientSize = System::Drawing::Size(312, 337);
+			this->ClientSize = System::Drawing::Size(277, 261);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->textBox1);
@@ -142,6 +142,7 @@ namespace RarejectGUI {
 			this->Controls->Add(this->listaProcesos);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"VentanaProcesos";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Procesos activos...";
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -225,6 +226,7 @@ namespace RarejectGUI {
 			this->Controls->Add(this->listaProcesos);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"VentanaProcesos";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Procesos activos...";
 			this->ResumeLayout(false);
 			this->PerformLayout();
