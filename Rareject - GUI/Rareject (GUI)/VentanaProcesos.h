@@ -26,42 +26,11 @@ namespace RarejectGUI {
 		VentanaProcesos(void)
 		{
 			InitializeComponent();
-
-			HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); /*Creamos snapshot de los procesos activos actualmente*/
-			PROCESSENTRY32* processInfo = new PROCESSENTRY32;
-
-			processInfo->dwSize = sizeof(PROCESSENTRY32);
-			int index = 0;
-
-			while (Process32Next(hSnapShot, processInfo) != FALSE)
-			{
-				int pid = processInfo->th32ProcessID;
-				String^ name = gcnew String(processInfo->szExeFile);
-
-				String^ processinfo = pid + " (" + name + ")";
-
-				listaProcesos->Items->Add(processinfo);
-			}
 		}
+		
 		VentanaProcesos(TextBox^ pidTextBox)
 		{
 			InitializeComponent(pidTextBox);
-
-			HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); /*Creamos snapshot de los procesos activos actualmente*/
-			PROCESSENTRY32* processInfo = new PROCESSENTRY32;
-
-			processInfo->dwSize = sizeof(PROCESSENTRY32);
-			int index = 0;
-
-			while (Process32Next(hSnapShot, processInfo) != FALSE)
-			{
-				int pid = processInfo->th32ProcessID;
-				String^ name = gcnew String(processInfo->szExeFile);
-
-				String^ processinfo = pid + " (" + name + ")";
-
-				listaProcesos->Items->Add(processinfo);
-			}
 		}
 
 	protected:
@@ -165,7 +134,7 @@ namespace RarejectGUI {
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::ActiveCaptionText;
-			this->ClientSize = System::Drawing::Size(277, 261);
+			this->ClientSize = System::Drawing::Size(312, 337);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->textBox1);
@@ -259,6 +228,8 @@ namespace RarejectGUI {
 			this->Text = L"Procesos activos...";
 			this->ResumeLayout(false);
 			this->PerformLayout();
+			this->Load += gcnew System::EventHandler(this, &VentanaProcesos::VentanaProcesos_Load);
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &VentanaProcesos::VentanaProcesos_FormClosing);
 
 		}
 
@@ -279,5 +250,25 @@ namespace RarejectGUI {
 		this->Close();
 
 	}
+
+private: System::Void VentanaProcesos_Load(System::Object^  sender, System::EventArgs^  e) {
+	HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); /*Creamos snapshot de los procesos activos actualmente*/
+	PROCESSENTRY32* processInfo = new PROCESSENTRY32;
+
+	processInfo->dwSize = sizeof(PROCESSENTRY32);
+	int index = 0;
+
+	while (Process32Next(hSnapShot, processInfo) != FALSE) {
+		int pid = processInfo->th32ProcessID;
+		String^ name = gcnew String(processInfo->szExeFile);
+
+		String^ processinfo = pid + " (" + name + ")";
+
+		listaProcesos->Items->Add(processinfo);
+	}
+}
+private: System::Void VentanaProcesos_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
+	listaProcesos->Items->Clear();
+}
 };
 }
