@@ -37,12 +37,17 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::Label^  label5;
 	private: System::Windows::Forms::TextBox^  txtRuta;
 	private: System::Windows::Forms::Button^  btnBuscar;
-	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
 	private: System::Windows::Forms::Button^  button3;
 	private: System::Windows::Forms::TextBox^  textBox1;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::LinkLabel^  linkLabel1;
 	private: System::Windows::Forms::Button^  button1;
+	private: System::Windows::Forms::CheckBox^  checkBox1;
+	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
+	private: bool dragging;
+	private: Point offset;
+
+	private: System::ComponentModel::IContainer^  components;
 
 
 	protected:
@@ -59,7 +64,7 @@ namespace RarejectGUI {
 
 	private:
 
-		System::ComponentModel::Container ^components;
+
 
 #pragma region Windows Form Designer generated code
 		
@@ -72,12 +77,13 @@ namespace RarejectGUI {
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->txtRuta = (gcnew System::Windows::Forms::TextBox());
 			this->btnBuscar = (gcnew System::Windows::Forms::Button());
-			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->linkLabel1 = (gcnew System::Windows::Forms::LinkLabel());
 			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
+			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->SuspendLayout();
 			// 
 			// btnProcesos
@@ -104,7 +110,6 @@ namespace RarejectGUI {
 			this->label4->Size = System::Drawing::Size(37, 13);
 			this->label4->TabIndex = 4;
 			this->label4->Text = L"- PID :";
-			this->label4->Click += gcnew System::EventHandler(this, &Rareject::label4_Click);
 			// 
 			// label5
 			// 
@@ -141,12 +146,6 @@ namespace RarejectGUI {
 			this->btnBuscar->UseVisualStyleBackColor = false;
 			this->btnBuscar->Click += gcnew System::EventHandler(this, &Rareject::btnBuscar_Click);
 			// 
-			// openFileDialog1
-			// 
-			this->openFileDialog1->DefaultExt = L"dll";
-			this->openFileDialog1->Filter = L"Biblioteca dinámica (*.dll)|*.dll";
-			this->openFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &Rareject::openFileDialog1_FileOk);
-			// 
 			// button3
 			// 
 			this->button3->BackColor = System::Drawing::Color::Transparent;
@@ -159,7 +158,7 @@ namespace RarejectGUI {
 			this->button3->TabIndex = 8;
 			this->button3->Text = L"Inyectar";
 			this->button3->UseVisualStyleBackColor = false;
-			this->button3->Click += gcnew System::EventHandler(this, &Rareject::button3_Click);
+			this->button3->Click += gcnew System::EventHandler(this, &Rareject::btnInyectar_Click);
 			// 
 			// textBox1
 			// 
@@ -205,7 +204,24 @@ namespace RarejectGUI {
 			this->button1->Size = System::Drawing::Size(75, 67);
 			this->button1->TabIndex = 13;
 			this->button1->UseVisualStyleBackColor = false;
-			this->button1->Click += gcnew System::EventHandler(this, &Rareject::button1_Click);
+			this->button1->Click += gcnew System::EventHandler(this, &Rareject::btnCerrar_Click);
+			// 
+			// checkBox1
+			// 
+			this->checkBox1->AutoSize = true;
+			this->checkBox1->BackColor = System::Drawing::SystemColors::MenuText;
+			this->checkBox1->ForeColor = System::Drawing::Color::Cyan;
+			this->checkBox1->Location = System::Drawing::Point(163, 130);
+			this->checkBox1->Name = L"checkBox1";
+			this->checkBox1->Size = System::Drawing::Size(114, 17);
+			this->checkBox1->TabIndex = 14;
+			this->checkBox1->Text = L"Cerrar tras inyectar";
+			this->checkBox1->UseVisualStyleBackColor = false;
+			// 
+			// openFileDialog1
+			// 
+			this->openFileDialog1->DefaultExt = L"dll";
+			this->openFileDialog1->Filter = L"Biblioteca dinámica (*.dll)|*.dll";
 			// 
 			// Rareject
 			// 
@@ -213,7 +229,8 @@ namespace RarejectGUI {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::MenuHighlight;
 			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
-			this->ClientSize = System::Drawing::Size(300, 316);
+			this->ClientSize = System::Drawing::Size(300, 315);
+			this->Controls->Add(this->checkBox1);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->linkLabel1);
 			this->Controls->Add(this->label1);
@@ -232,6 +249,9 @@ namespace RarejectGUI {
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Rareject v 0.1";
 			this->Load += gcnew System::EventHandler(this, &Rareject::MyForm_Load);
+			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Rareject::Rareject_MouseDown);
+			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Rareject::Rareject_MouseMove);
+			this->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &Rareject::Rareject_MouseUp);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -249,8 +269,6 @@ namespace RarejectGUI {
 
 		private: System::Void btnProcesos_Click(System::Object^  sender, System::EventArgs^  e) {
 			
-			/* Se abre la ventana con los procesos activos en el sistema */
-
 			Vent_Proc->ShowDialog();
 
 		}
@@ -265,48 +283,79 @@ namespace RarejectGUI {
 		
 		}
 
-		private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
+		private: System::Void btnInyectar_Click(System::Object^  sender, System::EventArgs^  e) {
 
 			marshal_context^ context = gcnew marshal_context();
+
 			DWORD PID = System::Convert::ToInt32(textBox1->Text);
 			const char *NOMBRE_DLL = context->marshal_as<const char*, String>(txtRuta->Text);
 
 		
-			HANDLE Proceso = OpenProcess(PROCESS_ALL_ACCESS, false, PID); /*Obtenemos y almacenamos en la variable Proceso el "process handle" (valor entero que identifica un proceso en Windows)*/
+			HANDLE Proceso = OpenProcess(PROCESS_ALL_ACCESS, false, PID); 
 
-			/* Para inyectar una biblioteca dinámica en un proceso utilizaremos la función "LoadLibrary", LoadLibrary carga un módulo especificado
-			en el espacio de direcciones del proceso que deseemos, nuestro objetivo es asignar la suficiente memoria en el espacio de direcciones
-			del proceso que soporte cargar la ruta de la DLL que queremos inyectar en dicho proceso. */
-			LPVOID LoadLibraryAddress = (LPVOID)GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA"); 	
+			if (Proceso) {
 
-			/* Asignamos la memoria suficiente en el proceso para poder "soportar" el tamaño total de la ruta donde se encuentre el DLL */
-			LPVOID ResMemDLL = VirtualAllocEx(Proceso, NULL, strlen(NOMBRE_DLL), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+				LPVOID LoadLibraryAddress = (LPVOID)GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
 
-			/* Escribimos la ruta del DLL en la memoria del proceso */
-			WriteProcessMemory(Proceso, ResMemDLL, NOMBRE_DLL, strlen(NOMBRE_DLL), NULL);
+				LPVOID ResMemDLL = VirtualAllocEx(Proceso, NULL, strlen(NOMBRE_DLL), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+
+				WriteProcessMemory(Proceso, ResMemDLL, NOMBRE_DLL, strlen(NOMBRE_DLL), NULL);
+
+				HANDLE HiloRemoto = CreateRemoteThread(Proceso, NULL, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryAddress, ResMemDLL, 0, NULL);
+
+				WaitForSingleObject(HiloRemoto, INFINITE);
+
+				VirtualFreeEx(Proceso, ResMemDLL, strlen(NOMBRE_DLL), MEM_RELEASE);
+
+				CloseHandle(HiloRemoto);
+				CloseHandle(Proceso);
+
+				if (checkBox1->Checked == TRUE) {
+				
+					this->Close();
+
+				}
+
+
+			}else{
 			
-			/*  Creamos un hilo remoto el cual empezará en la dirección de memoria del proceso asignada anteriormente, */
-			HANDLE HiloRemoto = CreateRemoteThread(Proceso, NULL, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryAddress, ResMemDLL, 0, NULL);
-			
-			/* Esperamos por el hilo */
-			WaitForSingleObject(HiloRemoto, INFINITE);
-			
-			/* Liberamos la memoria */
-			VirtualFreeEx(Proceso, ResMemDLL, strlen(NOMBRE_DLL), MEM_RELEASE); 
+				/* Ventanita de error ya que en este caso no habría ningún proceso existente. (En nuestro caso no hace 
+				falta, ya que gracias a la opción de escoger un proceso de la lista de procesos, siempre escogeremos un
+				proceso existente)*/
 
-			CloseHandle(HiloRemoto);
-			CloseHandle(Proceso);
+			}
 
 		}
 
-private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
-}
-private: System::Void label4_Click(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+		private: System::Void btnCerrar_Click(System::Object^  sender, System::EventArgs^  e) {
 
-	this->Close();
+			this->Close();
 
-}
+		}
+		
+		private: System::Void Rareject_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+
+			this->dragging = true;
+			this->offset = Point(e->X, e->Y);
+
+
+		}
+
+		private: System::Void Rareject_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+
+			if (this->dragging) { 
+				Point currentScreenPos = PointToScreen(e->Location);
+				Location = Point(currentScreenPos.X - this->offset.X,
+				currentScreenPos.Y - this->offset.Y);
+				}
+
+		}
+
+		private: System::Void Rareject_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+		
+			this->dragging = false; 
+
+		}
+	
 };
 }

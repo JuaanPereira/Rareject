@@ -27,7 +27,7 @@ namespace RarejectGUI {
 		{
 			InitializeComponent();
 		}
-		
+
 		VentanaProcesos(TextBox^ pidTextBox)
 		{
 			InitializeComponent(pidTextBox);
@@ -41,6 +41,7 @@ namespace RarejectGUI {
 				delete components;
 			}
 		}
+
 	private: System::Windows::Forms::ListBox^  listaProcesos;
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::TextBox^  textBox1;
@@ -64,8 +65,9 @@ namespace RarejectGUI {
 
 		System::ComponentModel::Container ^components;
 
+
 #pragma region Windows Form Designer generated code
-		
+
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(VentanaProcesos::typeid));
@@ -98,7 +100,7 @@ namespace RarejectGUI {
 			this->button1->TabIndex = 1;
 			this->button1->Text = L"Finalizar";
 			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &VentanaProcesos::button1_Click);
+			this->button1->Click += gcnew System::EventHandler(this, &VentanaProcesos::btnFinalizar_Click);
 			// 
 			// textBox1
 			// 
@@ -151,6 +153,7 @@ namespace RarejectGUI {
 
 		void InitializeComponent(TextBox^ pidTextBox)
 		{
+
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(VentanaProcesos::typeid));
 			this->listaProcesos = (gcnew System::Windows::Forms::ListBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
@@ -182,7 +185,7 @@ namespace RarejectGUI {
 			this->button1->TabIndex = 1;
 			this->button1->Text = L"Finalizar";
 			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &VentanaProcesos::button1_Click);
+			this->button1->Click += gcnew System::EventHandler(this, &VentanaProcesos::btnFinalizar_Click);
 			// 
 			// textBox1
 			// 
@@ -235,7 +238,7 @@ namespace RarejectGUI {
 
 		}
 
-	/*public: static int processID;*/
+		/*public: static int processID;*/
 
 	private: System::Void listaProcesos_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 
@@ -247,30 +250,38 @@ namespace RarejectGUI {
 
 	}
 
-	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void btnFinalizar_Click(System::Object^  sender, System::EventArgs^  e) {
+
 		pidTextBox->Text = System::Convert::ToString(processID);
+
 		this->Close();
 
 	}
 
-private: System::Void VentanaProcesos_Load(System::Object^  sender, System::EventArgs^  e) {
-	HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); /*Creamos snapshot de los procesos activos actualmente*/
-	PROCESSENTRY32* processInfo = new PROCESSENTRY32;
+	private: System::Void VentanaProcesos_Load(System::Object^  sender, System::EventArgs^  e) {
 
-	processInfo->dwSize = sizeof(PROCESSENTRY32);
-	int index = 0;
+		HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); /*Creamos snapshot de los procesos activos actualmente*/
+		PROCESSENTRY32* processInfo = new PROCESSENTRY32;
 
-	while (Process32Next(hSnapShot, processInfo) != FALSE) {
-		int pid = processInfo->th32ProcessID;
-		String^ name = gcnew String(processInfo->szExeFile);
+		processInfo->dwSize = sizeof(PROCESSENTRY32);
+		int index = 0;
 
-		String^ processinfo = pid + " (" + name + ")";
+		while (Process32Next(hSnapShot, processInfo) != FALSE) {
 
-		listaProcesos->Items->Add(processinfo);
+			int pid = processInfo->th32ProcessID;
+			String^ name = gcnew String(processInfo->szExeFile);
+			String^ processinfo = pid + " (" + name + ")";
+
+			listaProcesos->Items->Add(processinfo);
+		}
 	}
-}
-private: System::Void VentanaProcesos_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
-	listaProcesos->Items->Clear();
-}
-};
+
+	private: System::Void VentanaProcesos_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
+
+		listaProcesos->Items->Clear();
+
+	}
+
+
+	};
 }
