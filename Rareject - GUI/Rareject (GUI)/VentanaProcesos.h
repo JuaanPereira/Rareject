@@ -88,6 +88,7 @@ namespace RarejectGUI {
 			this->listaProcesos->Size = System::Drawing::Size(221, 147);
 			this->listaProcesos->TabIndex = 0;
 			this->listaProcesos->SelectedIndexChanged += gcnew System::EventHandler(this, &VentanaProcesos::listaProcesos_SelectedIndexChanged);
+			this->listaProcesos->DoubleClick += gcnew System::EventHandler(this, &VentanaProcesos::btnFinalizar_Click);
 			// 
 			// button1
 			// 
@@ -173,6 +174,7 @@ namespace RarejectGUI {
 			this->listaProcesos->Size = System::Drawing::Size(221, 147);
 			this->listaProcesos->TabIndex = 0;
 			this->listaProcesos->SelectedIndexChanged += gcnew System::EventHandler(this, &VentanaProcesos::listaProcesos_SelectedIndexChanged);
+			this->listaProcesos->DoubleClick += gcnew System::EventHandler(this, &VentanaProcesos::btnFinalizar_Click);
 			// 
 			// button1
 			// 
