@@ -48,6 +48,8 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::TextBox^ pidTextBox;
+	private: bool dragging;
+	private: Point offset;
 
 	protected:
 
@@ -88,18 +90,19 @@ namespace RarejectGUI {
 			this->listaProcesos->Size = System::Drawing::Size(221, 147);
 			this->listaProcesos->TabIndex = 0;
 			this->listaProcesos->SelectedIndexChanged += gcnew System::EventHandler(this, &VentanaProcesos::listaProcesos_SelectedIndexChanged);
+			this->listaProcesos->DoubleClick += gcnew System::EventHandler(this, &VentanaProcesos::btnFinalizar_Click);
 			// 
 			// button1
 			// 
+			this->button1->BackColor = System::Drawing::Color::Black;
 			this->button1->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->button1->ForeColor = System::Drawing::Color::Cyan;
-			this->button1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button1.Image")));
 			this->button1->Location = System::Drawing::Point(69, 226);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(139, 23);
 			this->button1->TabIndex = 1;
 			this->button1->Text = L"Finalizar";
-			this->button1->UseVisualStyleBackColor = true;
+			this->button1->UseVisualStyleBackColor = false;
 			this->button1->Click += gcnew System::EventHandler(this, &VentanaProcesos::btnFinalizar_Click);
 			// 
 			// textBox1
@@ -136,16 +139,20 @@ namespace RarejectGUI {
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::ActiveCaptionText;
+			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
 			this->ClientSize = System::Drawing::Size(277, 261);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->listaProcesos);
-			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Name = L"VentanaProcesos";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Procesos activos...";
+			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaProcesos::VentanaProcesos_MouseDown);
+			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaProcesos::VentanaProcesos_MouseMove);
+			this->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaProcesos::VentanaProcesos_MouseUp);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -173,18 +180,19 @@ namespace RarejectGUI {
 			this->listaProcesos->Size = System::Drawing::Size(221, 147);
 			this->listaProcesos->TabIndex = 0;
 			this->listaProcesos->SelectedIndexChanged += gcnew System::EventHandler(this, &VentanaProcesos::listaProcesos_SelectedIndexChanged);
+			this->listaProcesos->DoubleClick += gcnew System::EventHandler(this, &VentanaProcesos::btnFinalizar_Click);
 			// 
 			// button1
 			// 
+			this->button1->BackColor = System::Drawing::Color::Black;
 			this->button1->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->button1->ForeColor = System::Drawing::Color::Cyan;
-			this->button1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button1.Image")));
 			this->button1->Location = System::Drawing::Point(69, 226);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(139, 23);
 			this->button1->TabIndex = 1;
 			this->button1->Text = L"Finalizar";
-			this->button1->UseVisualStyleBackColor = true;
+			this->button1->UseVisualStyleBackColor = false;
 			this->button1->Click += gcnew System::EventHandler(this, &VentanaProcesos::btnFinalizar_Click);
 			// 
 			// textBox1
@@ -229,8 +237,13 @@ namespace RarejectGUI {
 			this->Controls->Add(this->listaProcesos);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"VentanaProcesos";
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Procesos activos...";
+			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
+			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaProcesos::VentanaProcesos_MouseDown);
+			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaProcesos::VentanaProcesos_MouseMove);
+			this->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaProcesos::VentanaProcesos_MouseUp);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 			this->Load += gcnew System::EventHandler(this, &VentanaProcesos::VentanaProcesos_Load);
@@ -240,48 +253,73 @@ namespace RarejectGUI {
 
 		/*public: static int processID;*/
 
-	private: System::Void listaProcesos_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+		private: System::Void listaProcesos_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+	
+			String^ process = listaProcesos->GetItemText(listaProcesos->SelectedItem);
+			array<String^>^ processinfo = process->Split(' ');	//Separa la información del proceso en varias cadenas de texto
 
-		String^ process = listaProcesos->GetItemText(listaProcesos->SelectedItem);
-		array<String^>^ processinfo = process->Split(' ');	//Separa la información del proceso en varias cadenas de texto
+			textBox1->Text = processinfo[1]->Substring(1, (processinfo[1]->Length - 2)) + " (" + processinfo[0] + ")";	//Modifica la visualización de la información del proceso
+			processID = System::Convert::ToInt32(processinfo[0]);
 
-		textBox1->Text = processinfo[1]->Substring(1, (processinfo[1]->Length - 2)) + " (" + processinfo[0] + ")";	//Modifica la visualización de la información del proceso
-		processID = System::Convert::ToInt32(processinfo[0]);
-
-	}
-
-	private: System::Void btnFinalizar_Click(System::Object^  sender, System::EventArgs^  e) {
-
-		pidTextBox->Text = System::Convert::ToString(processID);
-
-		this->Close();
-
-	}
-
-	private: System::Void VentanaProcesos_Load(System::Object^  sender, System::EventArgs^  e) {
-
-		HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); /*Creamos snapshot de los procesos activos actualmente*/
-		PROCESSENTRY32* processInfo = new PROCESSENTRY32;
-
-		processInfo->dwSize = sizeof(PROCESSENTRY32);
-		int index = 0;
-
-		while (Process32Next(hSnapShot, processInfo) != FALSE) {
-
-			int pid = processInfo->th32ProcessID;
-			String^ name = gcnew String(processInfo->szExeFile);
-			String^ processinfo = pid + " (" + name + ")";
-
-			listaProcesos->Items->Add(processinfo);
 		}
-	}
 
-	private: System::Void VentanaProcesos_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
+		private: System::Void btnFinalizar_Click(System::Object^  sender, System::EventArgs^  e) {
 
-		listaProcesos->Items->Clear();
+			pidTextBox->Text = System::Convert::ToString(processID);
 
-	}
+			this->Close();
+
+		}
+
+		private: System::Void VentanaProcesos_Load(System::Object^  sender, System::EventArgs^  e) {
+
+			HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); /*Creamos snapshot de los procesos activos actualmente*/
+			PROCESSENTRY32* processInfo = new PROCESSENTRY32;
+
+			processInfo->dwSize = sizeof(PROCESSENTRY32);
+			int index = 0;
+
+			while (Process32Next(hSnapShot, processInfo) != FALSE) {
+
+				int pid = processInfo->th32ProcessID;
+				String^ name = gcnew String(processInfo->szExeFile);
+				String^ processinfo = pid + " (" + name + ")";
+
+				listaProcesos->Items->Add(processinfo);
+			}
+		}
+
+		private: System::Void VentanaProcesos_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
+
+			listaProcesos->Items->Clear();
+
+		}
+	
+		private: System::Void VentanaProcesos_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+	
+			this->dragging = true;
+			this->offset = Point(e->X, e->Y);
+
+		}
+		
+		private: System::Void VentanaProcesos_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+		
+			this->dragging = false;
+		
+		}
+			
+		private: System::Void VentanaProcesos_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+
+			if (this->dragging) {
+
+				Point currentScreenPos = PointToScreen(e->Location);
+				Location = Point(currentScreenPos.X - this->offset.X,
+				currentScreenPos.Y - this->offset.Y);
+
+			}
 
 
+}
+	
 	};
 }
