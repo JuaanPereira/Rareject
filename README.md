@@ -1,25 +1,20 @@
 "+" -> Adición.
-"-" -> Eliminaciones.
-"x" -> Modificaciones.
-"?" -> Bug sin arreglar.
-"!" -> Debe ser implementado en la siguiente release.
 
+| "-" -> Eliminaciones.
 
-[+] Nuevo diseño de ventanas agregado.
-[+] Nueva ventana que contiene dos nuevas opciones, Close on Inject y Injection Timer, ambas funcionan.
-[+] Nueva ventana que contiene información adicional.
-[+] Todas las ventanas son borderless y son movibles con el ratón.
-[+] Todas las ventanas aparecen en el centro de la pantalla.
+| "x" -> Modificaciones.
 
-[-] Las imágenes que tenían los botones (fondo cyan) han sido eliminadas.
-[-] Eliminada la imágen de la "x" que tenía el botón salir y reemplazada por texto.
+| "?" -> Bug sin arreglar.
 
-[x] Close On Inject ahora aparece en una ventana a parte.
-[x] El link que redireccionaba a GitHub ahora está funcional y es clickable, está en la ventana de "Acerca de..".
+| "!" -> Debe ser implementado en la siguiente release.
 
+[+] ToolTip en el Time Slider. 
 
-[?] El "time slider" que aparece en una ventana aparte y permite al usuario escoger en un rango de segundos el delay de la inyección no guarda su estado tras
-cerrar la ventana, no supone un problema ya que el tiempo elegido por el usuario en dicho slider se almacena en una variable con la que se opera más tarde, pero queda
-anti estético.
+Ahora cada vez que el usuario interactúe con el slider, ya sea pasando el ratón por encima o moviendo posiciones con el cursor, podrá ver una pequeña tooltip que le informará de que si quiere mover las posiciones del slider de 1 en 1 debe usar las flechas del ratón o AvPag - RePag.
+Esto se debe a que, por defecto, todos los ratones mueven 3 posiciones de cualquier slider cuando se utiliza la rueda del ratón sobre el mismo.
 
-[!] Ventanas de diálogo con mensajes de error.
+[-] Una Image List "imageList1" que por alguna razón estaba en la ventana de Opciones Avanzadas y no tenía ninguna función asociada a ella.
+
+[x] Ahora el Time Slider tiene un tick que marca cada 30 posiciones (es decir, 5 ticks en total, ya que el 0 también cuenta y es hasta el 120). 
+
+[!] Ventanas de diálogo que informan de errores.
