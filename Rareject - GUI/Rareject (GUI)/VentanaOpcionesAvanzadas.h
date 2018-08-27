@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace RarejectGUI {
 
@@ -53,10 +53,12 @@ namespace RarejectGUI {
 	public: System::Windows::Forms::CheckBox^  cbCloseOnInject;
 	private: System::Windows::Forms::Button^  btnSalir;
 	public: System::Windows::Forms::CheckBox^  cbInjectionTimer;
-	private: System::Windows::Forms::ImageList^  imageList1;
+
 	private: System::Windows::Forms::TrackBar^  tbTime;
 	public: System::Windows::Forms::TextBox^  txtSegundos;
 	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::ToolTip^  ttTimer;
+
 
 
 	private: System::ComponentModel::IContainer^  components;
@@ -71,10 +73,10 @@ namespace RarejectGUI {
 			this->cbCloseOnInject = (gcnew System::Windows::Forms::CheckBox());
 			this->btnSalir = (gcnew System::Windows::Forms::Button());
 			this->cbInjectionTimer = (gcnew System::Windows::Forms::CheckBox());
-			this->imageList1 = (gcnew System::Windows::Forms::ImageList(this->components));
 			this->tbTime = (gcnew System::Windows::Forms::TrackBar());
 			this->txtSegundos = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->ttTimer = (gcnew System::Windows::Forms::ToolTip(this->components));
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->tbTime))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -113,20 +115,16 @@ namespace RarejectGUI {
 			this->cbInjectionTimer->UseVisualStyleBackColor = true;
 			this->cbInjectionTimer->CheckedChanged += gcnew System::EventHandler(this, &VentanaOpcionesAvanzadas::cbInjectionTimer_CheckedChanged);
 			// 
-			// imageList1
-			// 
-			this->imageList1->ColorDepth = System::Windows::Forms::ColorDepth::Depth8Bit;
-			this->imageList1->ImageSize = System::Drawing::Size(16, 16);
-			this->imageList1->TransparentColor = System::Drawing::Color::Transparent;
-			// 
 			// tbTime
 			// 
 			this->tbTime->Enabled = false;
+			this->tbTime->LargeChange = 1;
 			this->tbTime->Location = System::Drawing::Point(12, 81);
 			this->tbTime->Maximum = 120;
 			this->tbTime->Name = L"tbTime";
 			this->tbTime->Size = System::Drawing::Size(95, 45);
 			this->tbTime->TabIndex = 3;
+			this->tbTime->TickFrequency = 30;
 			this->tbTime->Scroll += gcnew System::EventHandler(this, &VentanaOpcionesAvanzadas::tbTime_Scroll);
 			// 
 			// txtSegundos
@@ -145,7 +143,7 @@ namespace RarejectGUI {
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(141, 13);
 			this->label1->TabIndex = 5;
-			this->label1->Text = L"OPCIONES DE INYECCI�N";
+			this->label1->Text = L"OPCIONES DE INYECCIÓN";
 			// 
 			// VentanaOpcionesAvanzadas
 			// 
@@ -186,13 +184,14 @@ namespace RarejectGUI {
 
 		private: System::Void tbTime_Scroll(System::Object^  sender, System::EventArgs^  e) {
 		
+			ttTimer->SetToolTip(tbTime, "Para mover las posiciones de una en una usa las flechas del teclado o AvPag - RePag.");
+
 			txtSegundos->Text = System::Convert::ToString(tbTime->Value);
 
 			Tiempo_Segundos = System::Convert::ToInt16(txtSegundos->Text);
 
-
 		}
-		
+
 		private: System::Void cbInjectionTimer_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 		
 			if (cbInjectionTimer->Checked) {
@@ -230,5 +229,6 @@ namespace RarejectGUI {
 			this->offset = Point(e->X, e->Y);
 		
 		}
+
 	};
 }
