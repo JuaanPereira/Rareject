@@ -18,12 +18,19 @@ namespace RarejectGUI {
 			
 		}
 
-		VentanaOpcionesAvanzadas(bool previousState, bool previousCBTimerState) {
+		VentanaOpcionesAvanzadas(bool previousState, bool previousCBTimerState, int previousTBTimerValue) {
 
 			InitializeComponent();
 
 			cbCloseOnInject->Checked = previousState;
 			cbInjectionTimer->Checked = previousCBTimerState;
+
+			if (previousCBTimerState) {
+				tbTime->Value = previousTBTimerValue;
+				txtSegundos->Text = System::Convert::ToString(previousTBTimerValue);
+				Tiempo_Segundos = previousTBTimerValue;
+			} else
+				txtSegundos->Text = System::Convert::ToString(0);
 
 		}
 

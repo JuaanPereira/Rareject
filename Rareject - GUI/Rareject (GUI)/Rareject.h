@@ -324,8 +324,9 @@ namespace RarejectGUI {
 		}
 
 		private: System::Void btnOpcionesAvanzadas_Click(System::Object^  sender, System::EventArgs^  e) {
+			int currentTBTimerValue = System::Convert::ToInt32(lblTiempoEspera->Text);
 
-			Opc_Av = gcnew VentanaOpcionesAvanzadas(currentCheckState, currentCBTimerState);
+			Opc_Av = gcnew VentanaOpcionesAvanzadas(currentCheckState, currentCBTimerState, currentTBTimerValue);
 			Opc_Av->ShowDialog();
 
 			currentCheckState = Opc_Av->currentState;
@@ -337,7 +338,7 @@ namespace RarejectGUI {
 				lblCloseInject->ForeColor = System::Drawing::Color::Green;
 
 
-			}else if (!Opc_Av->cbCloseOnInject->Checked) {
+			} else {
 			
 				lblCloseInject->Text = "INACTIVO";
 				lblCloseInject->ForeColor = System::Drawing::Color::Yellow;
@@ -355,6 +356,11 @@ namespace RarejectGUI {
 					lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
 
 				}
+
+			} else {
+				
+				lblTiempoEspera->Text = "0";
+				lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
 
 			}
 
