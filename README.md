@@ -1,4 +1,4 @@
-"+" -> Adición.
+| "+" -> Adición.
 
 | "-" -> Eliminaciones.
 
