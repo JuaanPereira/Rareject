@@ -44,7 +44,7 @@ namespace RarejectGUI {
 
 	private: System::Windows::Forms::ListBox^  listaProcesos;
 	private: System::Windows::Forms::Button^  button1;
-	private: System::Windows::Forms::TextBox^  textBox1;
+	private: System::Windows::Forms::TextBox^  txtPID;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::TextBox^ pidTextBox;
@@ -75,7 +75,7 @@ namespace RarejectGUI {
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(VentanaProcesos::typeid));
 			this->listaProcesos = (gcnew System::Windows::Forms::ListBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->txtPID = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
@@ -105,13 +105,13 @@ namespace RarejectGUI {
 			this->button1->UseVisualStyleBackColor = false;
 			this->button1->Click += gcnew System::EventHandler(this, &VentanaProcesos::btnFinalizar_Click);
 			// 
-			// textBox1
+			// txtPID
 			// 
-			this->textBox1->Enabled = false;
-			this->textBox1->Location = System::Drawing::Point(26, 188);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(221, 20);
-			this->textBox1->TabIndex = 2;
+			this->txtPID->Enabled = false;
+			this->txtPID->Location = System::Drawing::Point(26, 188);
+			this->txtPID->Name = L"txtPID";
+			this->txtPID->Size = System::Drawing::Size(221, 20);
+			this->txtPID->TabIndex = 2;
 			// 
 			// label1
 			// 
@@ -143,7 +143,7 @@ namespace RarejectGUI {
 			this->ClientSize = System::Drawing::Size(277, 261);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
-			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->txtPID);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->listaProcesos);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
@@ -164,7 +164,7 @@ namespace RarejectGUI {
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(VentanaProcesos::typeid));
 			this->listaProcesos = (gcnew System::Windows::Forms::ListBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->txtPID = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->pidTextBox = pidTextBox;
@@ -195,13 +195,13 @@ namespace RarejectGUI {
 			this->button1->UseVisualStyleBackColor = false;
 			this->button1->Click += gcnew System::EventHandler(this, &VentanaProcesos::btnFinalizar_Click);
 			// 
-			// textBox1
+			// txtPID
 			// 
-			this->textBox1->Enabled = false;
-			this->textBox1->Location = System::Drawing::Point(26, 188);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(221, 20);
-			this->textBox1->TabIndex = 2;
+			this->txtPID->Enabled = false;
+			this->txtPID->Location = System::Drawing::Point(26, 188);
+			this->txtPID->Name = L"txtPID";
+			this->txtPID->Size = System::Drawing::Size(221, 20);
+			this->txtPID->TabIndex = 2;
 			// 
 			// label1
 			// 
@@ -232,7 +232,7 @@ namespace RarejectGUI {
 			this->ClientSize = System::Drawing::Size(277, 261);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
-			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->txtPID);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->listaProcesos);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
@@ -258,7 +258,7 @@ namespace RarejectGUI {
 			String^ process = listaProcesos->GetItemText(listaProcesos->SelectedItem);
 			array<String^>^ processinfo = process->Split(' ');	//Separa la información del proceso en varias cadenas de texto
 
-			textBox1->Text = processinfo[1]->Substring(1, (processinfo[1]->Length - 2)) + " (" + processinfo[0] + ")";	//Modifica la visualización de la información del proceso
+			txtPID->Text = processinfo[1]->Substring(1, (processinfo[1]->Length - 2)) + " (" + processinfo[0] + ")";	//Modifica la visualización de la información del proceso
 			processID = System::Convert::ToInt32(processinfo[0]);
 
 		}

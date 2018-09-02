@@ -39,25 +39,23 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::Label^  label5;
 	private: System::Windows::Forms::TextBox^  txtRuta;
 	private: System::Windows::Forms::Button^  btnBuscar;
-	private: System::Windows::Forms::Button^  button3;
-	private: System::Windows::Forms::TextBox^  textBox1;
+	private: System::Windows::Forms::Button^  btnInyectar;
+	private: System::Windows::Forms::TextBox^  txtPID;
 	private: System::Windows::Forms::Label^  label1;
-	private: bool currentCheckState = false;
-	private: bool currentCBTimerState = false;
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
-	private: bool dragging;
-	private: Point offset;
 	private: System::Windows::Forms::Button^  btnOpcionesAvanzadas;
-	private: System::Windows::Forms::Button^  button1;
+	private: System::Windows::Forms::Button^  btnCerrar;
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::Label^  lblCloseInject;
 	private: System::Windows::Forms::Label^  lblTimerStatus;
 	private: System::Windows::Forms::Label^  lblTiempoEspera;
 	private: System::Windows::Forms::Button^  btnAcercaDe;
-
-
 	private: System::ComponentModel::IContainer^  components;
 
+	private: Point offset;
+	private: bool currentCheckState = false;
+	private: bool currentCBTimerState = false;
+	private: bool dragging;
 
 #pragma region Windows Form Designer generated code
 		
@@ -70,12 +68,12 @@ namespace RarejectGUI {
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->txtRuta = (gcnew System::Windows::Forms::TextBox());
 			this->btnBuscar = (gcnew System::Windows::Forms::Button());
-			this->button3 = (gcnew System::Windows::Forms::Button());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->btnInyectar = (gcnew System::Windows::Forms::Button());
+			this->txtPID = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->btnOpcionesAvanzadas = (gcnew System::Windows::Forms::Button());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->btnCerrar = (gcnew System::Windows::Forms::Button());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->lblCloseInject = (gcnew System::Windows::Forms::Label());
 			this->lblTimerStatus = (gcnew System::Windows::Forms::Label());
@@ -141,27 +139,27 @@ namespace RarejectGUI {
 			this->btnBuscar->UseVisualStyleBackColor = false;
 			this->btnBuscar->Click += gcnew System::EventHandler(this, &Rareject::btnBuscar_Click);
 			// 
-			// button3
+			// btnInyectar
 			// 
-			this->button3->BackColor = System::Drawing::Color::Black;
-			this->button3->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
-			this->button3->ForeColor = System::Drawing::Color::Cyan;
-			this->button3->Location = System::Drawing::Point(15, 224);
-			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(139, 34);
-			this->button3->TabIndex = 8;
-			this->button3->Text = L"Inyectar";
-			this->button3->UseVisualStyleBackColor = false;
-			this->button3->Click += gcnew System::EventHandler(this, &Rareject::btnInyectar_Click);
+			this->btnInyectar->BackColor = System::Drawing::Color::Black;
+			this->btnInyectar->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
+			this->btnInyectar->ForeColor = System::Drawing::Color::Cyan;
+			this->btnInyectar->Location = System::Drawing::Point(15, 224);
+			this->btnInyectar->Name = L"btnInyectar";
+			this->btnInyectar->Size = System::Drawing::Size(139, 34);
+			this->btnInyectar->TabIndex = 8;
+			this->btnInyectar->Text = L"Inyectar";
+			this->btnInyectar->UseVisualStyleBackColor = false;
+			this->btnInyectar->Click += gcnew System::EventHandler(this, &Rareject::btnInyectar_Click);
 			// 
-			// textBox1
+			// txtPID
 			// 
-			this->textBox1->Enabled = false;
-			this->textBox1->Location = System::Drawing::Point(93, 127);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(61, 20);
-			this->textBox1->TabIndex = 9;
-			this->textBox1->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->txtPID->Enabled = false;
+			this->txtPID->Location = System::Drawing::Point(93, 127);
+			this->txtPID->Name = L"txtPID";
+			this->txtPID->Size = System::Drawing::Size(61, 20);
+			this->txtPID->TabIndex = 9;
+			this->txtPID->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// label1
 			// 
@@ -190,16 +188,16 @@ namespace RarejectGUI {
 			this->btnOpcionesAvanzadas->UseVisualStyleBackColor = false;
 			this->btnOpcionesAvanzadas->Click += gcnew System::EventHandler(this, &Rareject::btnOpcionesAvanzadas_Click);
 			// 
-			// button1
+			// btnCerrar
 			// 
-			this->button1->BackColor = System::Drawing::SystemColors::MenuText;
-			this->button1->Location = System::Drawing::Point(15, 306);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(139, 34);
-			this->button1->TabIndex = 13;
-			this->button1->Text = L"Cerrar Rareject";
-			this->button1->UseVisualStyleBackColor = false;
-			this->button1->Click += gcnew System::EventHandler(this, &Rareject::btnCerrar_Click);
+			this->btnCerrar->BackColor = System::Drawing::SystemColors::MenuText;
+			this->btnCerrar->Location = System::Drawing::Point(15, 306);
+			this->btnCerrar->Name = L"btnCerrar";
+			this->btnCerrar->Size = System::Drawing::Size(139, 34);
+			this->btnCerrar->TabIndex = 13;
+			this->btnCerrar->Text = L"Cerrar Rareject";
+			this->btnCerrar->UseVisualStyleBackColor = false;
+			this->btnCerrar->Click += gcnew System::EventHandler(this, &Rareject::btnCerrar_Click);
 			// 
 			// label2
 			// 
@@ -270,10 +268,10 @@ namespace RarejectGUI {
 			this->Controls->Add(this->lblCloseInject);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->btnOpcionesAvanzadas);
-			this->Controls->Add(this->button1);
+			this->Controls->Add(this->btnCerrar);
 			this->Controls->Add(this->label1);
-			this->Controls->Add(this->textBox1);
-			this->Controls->Add(this->button3);
+			this->Controls->Add(this->txtPID);
+			this->Controls->Add(this->btnInyectar);
 			this->Controls->Add(this->btnBuscar);
 			this->Controls->Add(this->txtRuta);
 			this->Controls->Add(this->label5);
@@ -286,7 +284,7 @@ namespace RarejectGUI {
 			this->Name = L"Rareject";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Rareject v 0.1";
-			this->Load += gcnew System::EventHandler(this, &Rareject::MyForm_Load);
+			this->Load += gcnew System::EventHandler(this, &Rareject::Rareject_Load);
 			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Rareject::Rareject_MouseDown);
 			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Rareject::Rareject_MouseMove);
 			this->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &Rareject::Rareject_MouseUp);
@@ -301,9 +299,9 @@ namespace RarejectGUI {
 		VentanaOpcionesAvanzadas ^ Opc_Av;
 		VentanaAcercaDe ^ Vent_Acerca;
 
-		private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e) {
+		private: System::Void Rareject_Load(System::Object^  sender, System::EventArgs^  e) {
 
-			Vent_Proc = gcnew VentanaProcesos(textBox1);
+			Vent_Proc = gcnew VentanaProcesos(txtPID);
 
 		}
 
@@ -312,9 +310,10 @@ namespace RarejectGUI {
 			Vent_Proc->ShowDialog();
 
 		}
-
+				  
 		private: System::Void btnBuscar_Click(System::Object^  sender, System::EventArgs^  e) {
 			
+			//Muestra la ruta en el label correspondiente si se selecciona un archivo dll
 			if (openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
 		
 				txtRuta->Text = openFileDialog1->FileName;
@@ -324,21 +323,24 @@ namespace RarejectGUI {
 		}
 
 		private: System::Void btnOpcionesAvanzadas_Click(System::Object^  sender, System::EventArgs^  e) {
-			int currentTBTimerValue = System::Convert::ToInt32(lblTiempoEspera->Text);
+			int currentTBTimerValue = System::Convert::ToInt32(lblTiempoEspera->Text); //Recibe el valor actual indicado al usuario para el tiempo que se tardará en inyectar la DLL
 
+			/*Inicializa la ventana de opciones avanzadas con los parámetros que teníamos previamente, como el estado de los checkbox de "Cerrar tras inyectar" o
+			"Injection Timer" así como el valor (segundos) del slider y la TextBox que lo muestra*/
 			Opc_Av = gcnew VentanaOpcionesAvanzadas(currentCheckState, currentCBTimerState, currentTBTimerValue);
-			Opc_Av->ShowDialog();
+			Opc_Av->ShowDialog(); //Muestra la ventana de opciones avanzadas
 
+			//Almacena los valores de los checkbox tras cerrar la ventana de opciones avanzadas
 			currentCheckState = Opc_Av->currentState;
 			currentCBTimerState = Opc_Av->currentCBTimerState;
 
-			if (Opc_Av->cbCloseOnInject->Checked) {
+			if (Opc_Av->cbCloseOnInject->Checked) { //Muestra la palabra ACTIVO en verde si el checkbox de "Cerrar tras inyectar" está activado
 
 				lblCloseInject->Text = "ACTIVO";
 				lblCloseInject->ForeColor = System::Drawing::Color::Green;
 
 
-			} else {
+			} else { //Muestra la palabra INACTIVO en amarillo si el checkbox está desactivado
 			
 				lblCloseInject->Text = "INACTIVO";
 				lblCloseInject->ForeColor = System::Drawing::Color::Yellow;
@@ -346,18 +348,21 @@ namespace RarejectGUI {
 
 			}
 
-			if (Opc_Av->cbInjectionTimer->Checked) {
+			if (Opc_Av->cbInjectionTimer->Checked) { //Muestra el valor de retardo en el label asociado al timer si el checkbox está activado
 
 				lblTiempoEspera->Text = System::Convert::ToString(Opc_Av->Tiempo_Segundos);
-				lblTiempoEspera->ForeColor = System::Drawing::Color::Green;
 
-				if (lblTiempoEspera->Text == "0") {
+				if (lblTiempoEspera->Text == "0") { //Se muestra el valor en amarillo si es 0
 
 					lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
 
+				} else { //Si no se muestra en verde
+
+					lblTiempoEspera->ForeColor = System::Drawing::Color::Green;
+
 				}
 
-			} else {
+			} else { //Reinicia el formato y valor si el checkbox del timer está desactivado
 				
 				lblTiempoEspera->Text = "0";
 				lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
@@ -368,12 +373,12 @@ namespace RarejectGUI {
 
 		private: System::Void btnInyectar_Click(System::Object^  sender, System::EventArgs^  e) {
 
+			//Convertimos las variables a los tipos necesarios a partir de las labels de la interfaz
 			marshal_context^ context = gcnew marshal_context();
-
-			DWORD PID = System::Convert::ToInt32(textBox1->Text);
+			DWORD PID = System::Convert::ToInt32(txtPID->Text);
 			const char *NOMBRE_DLL = context->marshal_as<const char*, String>(txtRuta->Text);
 
-		
+			
 			HANDLE Proceso = OpenProcess(PROCESS_ALL_ACCESS, false, PID); 
 
 			if (Proceso) {
@@ -400,6 +405,7 @@ namespace RarejectGUI {
 				CloseHandle(HiloRemoto);
 				CloseHandle(Proceso);
 
+				//Cierra el programa si el checkbox de "Cerrar tras inyectar" se encuentra activado
 				if (Opc_Av->cbCloseOnInject->Checked) {
 
 					this->Close();
