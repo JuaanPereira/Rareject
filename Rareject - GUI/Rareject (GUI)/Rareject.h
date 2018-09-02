@@ -379,11 +379,11 @@ namespace RarejectGUI {
 			const char *NOMBRE_DLL = context->marshal_as<const char*, String>(txtRuta->Text);
 
 			
-			HANDLE Proceso = OpenProcess(PROCESS_ALL_ACCESS, false, PID); 
+			HANDLE Proceso = OpenProcess(PROCESS_ALL_ACCESS, false, PID);
 
-			if (Proceso) {
+			if (Proceso && !txtRuta->Text->Equals("")) {
 
-				if (Opc_Av->Tiempo_Segundos > 0) {
+				if (Opc_Av && Opc_Av->Tiempo_Segundos > 0) {
 
 					int Tiempo_Milisegundos = Opc_Av->Tiempo_Segundos * 1000;
 
@@ -406,17 +406,20 @@ namespace RarejectGUI {
 				CloseHandle(Proceso);
 
 				//Cierra el programa si el checkbox de "Cerrar tras inyectar" se encuentra activado
-				if (Opc_Av->cbCloseOnInject->Checked) {
+				if (Opc_Av && Opc_Av->cbCloseOnInject->Checked) {
 
 					this->Close();
 
 				}
 
+			} else if (txtRuta->Text->Equals("")) {
+				MessageBox::Show(("No existe una DLL seleccionada"), "No existe la DLL", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			} else {
 			
 				/* Ventanita de error ya que en este caso no habría ningún proceso existente. (En nuestro caso no hace 
 				falta, ya que gracias a la opción de escoger un proceso de la lista de procesos, siempre escogeremos un
 				proceso existente)*/
+				MessageBox::Show(("No existe  ningún proceso con PID " + PID), "No existe el proceso", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 
 			}
 
