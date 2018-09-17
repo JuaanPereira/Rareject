@@ -28,6 +28,7 @@
   <ItemGroup>
     <ClCompile Include="Rareject.cpp" />
     <ClCompile Include="VentanaAcercaDe.cpp" />
+    <ClCompile Include="VentanaModulos.cpp" />
     <ClCompile Include="VentanaOpcionesAvanzadas.cpp" />
     <ClCompile Include="VentanaProcesos.cpp" />
   </ItemGroup>
@@ -37,6 +38,9 @@
     </ClInclude>
     <ClInclude Include="resource.h" />
     <ClInclude Include="VentanaAcercaDe.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="VentanaModulos.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="VentanaOpcionesAvanzadas.h">
@@ -52,6 +56,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="VentanaAcercaDe.resx">
       <DependentUpon>VentanaAcercaDe.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentanaModulos.resx">
+      <DependentUpon>VentanaModulos.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VentanaOpcionesAvanzadas.resx">
       <DependentUpon>VentanaOpcionesAvanzadas.h</DependentUpon>

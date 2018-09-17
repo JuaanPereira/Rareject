@@ -3,6 +3,7 @@
 #include "VentanaProcesos.h"
 #include "VentanaOpcionesAvanzadas.h"
 #include "VentanaAcercaDe.h"
+#include "VentanaModulos.h"
 #include <time.h>
 #include <msclr\marshal.h>
 
@@ -55,6 +56,8 @@ namespace RarejectGUI {
 	private: Point offset;
 	private: bool currentCheckState = false;
 	private: bool currentCBTimerState = false;
+	private: System::Windows::Forms::Button^  btnModulos;
+	private: System::Windows::Forms::HelpProvider^  helpProvider1;
 	private: bool dragging;
 
 #pragma region Windows Form Designer generated code
@@ -79,6 +82,8 @@ namespace RarejectGUI {
 			this->lblTimerStatus = (gcnew System::Windows::Forms::Label());
 			this->lblTiempoEspera = (gcnew System::Windows::Forms::Label());
 			this->btnAcercaDe = (gcnew System::Windows::Forms::Button());
+			this->btnModulos = (gcnew System::Windows::Forms::Button());
+			this->helpProvider1 = (gcnew System::Windows::Forms::HelpProvider());
 			this->SuspendLayout();
 			// 
 			// btnProcesos
@@ -191,7 +196,7 @@ namespace RarejectGUI {
 			// btnCerrar
 			// 
 			this->btnCerrar->BackColor = System::Drawing::SystemColors::MenuText;
-			this->btnCerrar->Location = System::Drawing::Point(15, 306);
+			this->btnCerrar->Location = System::Drawing::Point(15, 274);
 			this->btnCerrar->Name = L"btnCerrar";
 			this->btnCerrar->Size = System::Drawing::Size(139, 34);
 			this->btnCerrar->TabIndex = 13;
@@ -204,7 +209,7 @@ namespace RarejectGUI {
 			this->label2->AutoSize = true;
 			this->label2->BackColor = System::Drawing::SystemColors::MenuText;
 			this->label2->ForeColor = System::Drawing::Color::Cyan;
-			this->label2->Location = System::Drawing::Point(168, 224);
+			this->label2->Location = System::Drawing::Point(168, 332);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(86, 13);
 			this->label2->TabIndex = 15;
@@ -215,7 +220,7 @@ namespace RarejectGUI {
 			this->lblCloseInject->AutoSize = true;
 			this->lblCloseInject->BackColor = System::Drawing::SystemColors::MenuText;
 			this->lblCloseInject->ForeColor = System::Drawing::Color::Yellow;
-			this->lblCloseInject->Location = System::Drawing::Point(260, 224);
+			this->lblCloseInject->Location = System::Drawing::Point(252, 332);
 			this->lblCloseInject->Name = L"lblCloseInject";
 			this->lblCloseInject->Size = System::Drawing::Size(57, 13);
 			this->lblCloseInject->TabIndex = 16;
@@ -226,7 +231,7 @@ namespace RarejectGUI {
 			this->lblTimerStatus->AutoSize = true;
 			this->lblTimerStatus->BackColor = System::Drawing::SystemColors::MenuText;
 			this->lblTimerStatus->ForeColor = System::Drawing::Color::Cyan;
-			this->lblTimerStatus->Location = System::Drawing::Point(168, 245);
+			this->lblTimerStatus->Location = System::Drawing::Point(12, 332);
 			this->lblTimerStatus->Name = L"lblTimerStatus";
 			this->lblTimerStatus->Size = System::Drawing::Size(107, 13);
 			this->lblTimerStatus->TabIndex = 17;
@@ -237,7 +242,7 @@ namespace RarejectGUI {
 			this->lblTiempoEspera->AutoSize = true;
 			this->lblTiempoEspera->BackColor = System::Drawing::SystemColors::MenuText;
 			this->lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
-			this->lblTiempoEspera->Location = System::Drawing::Point(281, 245);
+			this->lblTiempoEspera->Location = System::Drawing::Point(125, 332);
 			this->lblTiempoEspera->Name = L"lblTiempoEspera";
 			this->lblTiempoEspera->Size = System::Drawing::Size(13, 13);
 			this->lblTiempoEspera->TabIndex = 18;
@@ -247,7 +252,7 @@ namespace RarejectGUI {
 			// 
 			this->btnAcercaDe->BackColor = System::Drawing::SystemColors::MenuText;
 			this->btnAcercaDe->ForeColor = System::Drawing::Color::Cyan;
-			this->btnAcercaDe->Location = System::Drawing::Point(171, 306);
+			this->btnAcercaDe->Location = System::Drawing::Point(170, 274);
 			this->btnAcercaDe->Name = L"btnAcercaDe";
 			this->btnAcercaDe->Size = System::Drawing::Size(139, 34);
 			this->btnAcercaDe->TabIndex = 19;
@@ -255,13 +260,25 @@ namespace RarejectGUI {
 			this->btnAcercaDe->UseVisualStyleBackColor = false;
 			this->btnAcercaDe->Click += gcnew System::EventHandler(this, &Rareject::btnAcercaDe_Click);
 			// 
+			// btnModulos
+			// 
+			this->btnModulos->BackColor = System::Drawing::Color::Black;
+			this->btnModulos->Location = System::Drawing::Point(170, 224);
+			this->btnModulos->Name = L"btnModulos";
+			this->btnModulos->Size = System::Drawing::Size(139, 34);
+			this->btnModulos->TabIndex = 20;
+			this->btnModulos->Text = L"Ver módulos del proceso";
+			this->btnModulos->UseVisualStyleBackColor = false;
+			this->btnModulos->Click += gcnew System::EventHandler(this, &Rareject::btnModulos_Click);
+			// 
 			// Rareject
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::MenuHighlight;
 			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
-			this->ClientSize = System::Drawing::Size(321, 356);
+			this->ClientSize = System::Drawing::Size(321, 363);
+			this->Controls->Add(this->btnModulos);
 			this->Controls->Add(this->btnAcercaDe);
 			this->Controls->Add(this->lblTiempoEspera);
 			this->Controls->Add(this->lblTimerStatus);
@@ -298,6 +315,7 @@ namespace RarejectGUI {
 		VentanaProcesos ^ Vent_Proc;
 		VentanaOpcionesAvanzadas ^ Opc_Av;
 		VentanaAcercaDe ^ Vent_Acerca;
+		VentanaModulos ^ Vent_Modulos;
 
 		private: System::Void Rareject_Load(System::Object^  sender, System::EventArgs^  e) {
 
@@ -424,6 +442,30 @@ namespace RarejectGUI {
 			}
 
 		}
+
+		private: System::Void btnAcercaDe_Click(System::Object^  sender, System::EventArgs^  e) {
+
+			Vent_Acerca = gcnew VentanaAcercaDe();
+
+			Vent_Acerca->ShowDialog();
+
+		}
+
+		private: System::Void btnModulos_Click(System::Object^  sender, System::EventArgs^  e) {
+
+			if (Vent_Proc->Proceso_Seleccionado == false) {
+
+				MessageBox::Show(("No se pueden cargar los módulos ya que no hay proceso seleccionado"), "Selecciona un proceso...", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+
+			} else {
+
+				Vent_Modulos = gcnew VentanaModulos();
+
+				Vent_Modulos->ShowDialog();
+
+			}
+
+		}
 		
 		private: System::Void btnCerrar_Click(System::Object^  sender, System::EventArgs^  e) {
 
@@ -455,13 +497,6 @@ namespace RarejectGUI {
 
 		}
 		
-		private: System::Void btnAcercaDe_Click(System::Object^  sender, System::EventArgs^  e) {
 
-			Vent_Acerca = gcnew VentanaAcercaDe();
-
-			Vent_Acerca->ShowDialog();
-
-		}
-
-	};
+};
 }
