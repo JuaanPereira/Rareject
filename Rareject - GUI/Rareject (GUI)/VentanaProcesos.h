@@ -50,6 +50,7 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::TextBox^ pidTextBox;
 	private: bool dragging;
 	private: Point offset;
+	public: bool Proceso_Elegido = false;
 
 	protected:
 
@@ -260,6 +261,8 @@ namespace RarejectGUI {
 
 			txtPID->Text = processinfo[1]->Substring(1, (processinfo[1]->Length - 2)) + " (" + processinfo[0] + ")";	//Modifica la visualización de la información del proceso
 			processID = System::Convert::ToInt32(processinfo[0]);
+
+			Proceso_Elegido = true;
 
 		}
 
