@@ -459,8 +459,9 @@ namespace RarejectGUI {
 				 MessageBox::Show(("No se pueden cargar los módulos ya que no hay proceso seleccionado."), "Selecciona un proceso...", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 
 			} else {
+				DWORD PID = System::Convert::ToInt32(txtPID->Text);
 
-				Vent_Modulos = gcnew VentanaModulos();
+				Vent_Modulos = gcnew VentanaModulos(PID);
 
 				Vent_Modulos->ShowDialog();
 

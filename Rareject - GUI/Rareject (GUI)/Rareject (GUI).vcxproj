@@ -57,6 +57,9 @@
     <EmbeddedResource Include="VentanaAcercaDe.resx">
       <DependentUpon>VentanaAcercaDe.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="VentanaModulos.resx">
+      <DependentUpon>VentanaModulos.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="VentanaOpcionesAvanzadas.resx">
       <DependentUpon>VentanaOpcionesAvanzadas.h</DependentUpon>
     </EmbeddedResource>
