@@ -391,13 +391,13 @@ namespace RarejectGUI {
 
 			//Convertimos las variables a los tipos necesarios a partir de las labels de la interfaz
 			marshal_context^ context = gcnew marshal_context();
-			DWORD PID = System::Convert::ToInt32(txtPID->Text);
+			DWORD PID = txtPID->Text->Equals("") ? -1 : System::Convert::ToInt32(txtPID->Text);
 			const char *NOMBRE_DLL = context->marshal_as<const char*, String>(txtRuta->Text);
 
 			
 			HANDLE Proceso = OpenProcess(PROCESS_ALL_ACCESS, false, PID);
 
-			if (Proceso && !txtRuta->Text->Equals("")) {
+			if (Proceso && !txtRuta->Text->Equals("") && PID != -1) {
 
 				if (Opc_Av && Opc_Av->Tiempo_Segundos > 0) {
 
@@ -428,8 +428,18 @@ namespace RarejectGUI {
 
 				}
 
+			} else if (txtRuta->Text->Equals("") && PID == -1) {
+
+				MessageBox::Show("No se han seleccionado la DLL ni el PID del proceso", "Faltan parámetros", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+
 			} else if (txtRuta->Text->Equals("")) {
-				MessageBox::Show(("No existe una DLL seleccionada"), "No existe la DLL", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+
+				MessageBox::Show("No se ha seleccionado la DLL", "Falta la ruta", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			
+			} else if (PID == -1) {
+
+				MessageBox::Show("No se ha seleccionado el proceso previamente", "Falta el PID", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			
 			} else {
 			
 				/* Ventanita de error ya que en este caso no habría ningún proceso existente. (En nuestro caso no hace 
