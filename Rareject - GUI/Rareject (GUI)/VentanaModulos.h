@@ -17,9 +17,6 @@ namespace RarejectGUI {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-	/// <summary>
-	/// Resumen de VentanaModulos
-	/// </summary>
 	public ref class VentanaModulos : public System::Windows::Forms::Form
 	{
 	public:
@@ -32,11 +29,8 @@ namespace RarejectGUI {
 		{
 			InitializeComponent(PID);
 		}
-
+		
 	protected:
-		/// <summary>
-		/// Limpiar los recursos que se estén usando.
-		/// </summary>
 		~VentanaModulos()
 		{
 			if (components)
@@ -48,6 +42,10 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::ListBox^  listaModulos;
 			 DWORD PID;
 			 String^ ProcessName;
+	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::Button^  btnSalir;
+	private: bool dragging;
+	private: Point offset;
 	protected:
 
 	protected:
@@ -59,45 +57,67 @@ namespace RarejectGUI {
 	protected:
 
 	private:
-		/// <summary>
-		/// Variable del diseñador necesaria.
-		/// </summary>
+
 		System::ComponentModel::Container ^components;
 
 #pragma region Windows Form Designer generated code
-		/// <summary>
-		/// Método necesario para admitir el Diseñador. No se puede modificar
-		/// el contenido de este método con el editor de código.
-		/// </summary>
+
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(VentanaModulos::typeid));
 			this->listaModulos = (gcnew System::Windows::Forms::ListBox());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->btnSalir = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
-			// 
-			// listaModulos
-			// 
 			this->listaModulos->BackColor = System::Drawing::SystemColors::WindowText;
 			this->listaModulos->ForeColor = System::Drawing::Color::Cyan;
 			this->listaModulos->FormattingEnabled = true;
-			this->listaModulos->Location = System::Drawing::Point(0, 0);
+			this->listaModulos->Location = System::Drawing::Point(26, 35);
 			this->listaModulos->Name = L"listaModulos";
-			this->listaModulos->Size = System::Drawing::Size(286, 264);
+			this->listaModulos->Size = System::Drawing::Size(208, 147);
 			this->listaModulos->TabIndex = 0;
-			// 
-			// VentanaModulos
-			// 
+			this->label1->AutoSize = true;
+			this->label1->ForeColor = System::Drawing::Color::Aqua;
+			this->label1->Location = System::Drawing::Point(24, 11);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(170, 13);
+			this->label1->TabIndex = 1;
+			this->label1->Text = L"- Módulos cargados en el proceso:";
+			this->btnSalir->BackColor = System::Drawing::Color::Black;
+			this->btnSalir->ForeColor = System::Drawing::Color::Aqua;
+			this->btnSalir->Location = System::Drawing::Point(75, 195);
+			this->btnSalir->Name = L"btnSalir";
+			this->btnSalir->Size = System::Drawing::Size(105, 23);
+			this->btnSalir->TabIndex = 2;
+			this->btnSalir->Text = L"Finalizar";
+			this->btnSalir->UseVisualStyleBackColor = false;
+			this->btnSalir->Click += gcnew System::EventHandler(this, &VentanaModulos::btnSalir_Click);
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(284, 261);
+			this->BackColor = System::Drawing::Color::Black;
+			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
+			this->ClientSize = System::Drawing::Size(261, 230);
+			this->Controls->Add(this->btnSalir);
+			this->Controls->Add(this->label1);
 			this->Controls->Add(this->listaModulos);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Name = L"VentanaModulos";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"VentanaModulos";
+			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaModulos::VentanaModulos_MouseDown);
+			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaModulos::VentanaModulos_MouseMove);
+			this->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaModulos::VentanaModulos_MouseUp);
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 		
 		void InitializeComponent(DWORD PID){
+
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(VentanaModulos::typeid));
 			this->listaModulos = (gcnew System::Windows::Forms::ListBox());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->btnSalir = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// listaModulos
@@ -105,19 +125,50 @@ namespace RarejectGUI {
 			this->listaModulos->BackColor = System::Drawing::SystemColors::WindowText;
 			this->listaModulos->ForeColor = System::Drawing::Color::Cyan;
 			this->listaModulos->FormattingEnabled = true;
-			this->listaModulos->Location = System::Drawing::Point(0, 0);
+			this->listaModulos->Location = System::Drawing::Point(26, 35);
 			this->listaModulos->Name = L"listaModulos";
-			this->listaModulos->Size = System::Drawing::Size(286, 264);
+			this->listaModulos->Size = System::Drawing::Size(208, 147);
 			this->listaModulos->TabIndex = 0;
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->ForeColor = System::Drawing::Color::Aqua;
+			this->label1->Location = System::Drawing::Point(24, 11);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(170, 13);
+			this->label1->TabIndex = 1;
+			this->label1->Text = L"- Módulos cargados en el proceso:";
+			// 
+			// btnSalir
+			// 
+			this->btnSalir->BackColor = System::Drawing::Color::Black;
+			this->btnSalir->ForeColor = System::Drawing::Color::Aqua;
+			this->btnSalir->Location = System::Drawing::Point(75, 195);
+			this->btnSalir->Name = L"btnSalir";
+			this->btnSalir->Size = System::Drawing::Size(105, 23);
+			this->btnSalir->TabIndex = 2;
+			this->btnSalir->Text = L"Finalizar";
+			this->btnSalir->UseVisualStyleBackColor = false;		
 			// 
 			// VentanaModulos
 			// 
+			this->btnSalir->Click += gcnew System::EventHandler(this, &VentanaModulos::btnSalir_Click);
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(284, 261);
+			this->BackColor = System::Drawing::Color::Black;
+			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
+			this->ClientSize = System::Drawing::Size(261, 230);
+			this->Controls->Add(this->btnSalir);
+			this->Controls->Add(this->label1);
 			this->Controls->Add(this->listaModulos);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Name = L"VentanaModulos";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"VentanaModulos";
+			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaModulos::VentanaModulos_MouseDown);
+			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaModulos::VentanaModulos_MouseMove);
+			this->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaModulos::VentanaModulos_MouseUp);
 			this->ResumeLayout(false);
 			this->Load += gcnew System::EventHandler(this, &VentanaModulos::VentanaModulos_Load);
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &VentanaModulos::VentanaModulos_FormClosing);
@@ -158,8 +209,41 @@ namespace RarejectGUI {
 		}
 	
 		private: System::Void VentanaModulos_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
+
 			listaModulos->Items->Clear();
+
 		}
 
-	};
+		private: System::Void VentanaModulos_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+
+			this->dragging = false;
+
+
+		}
+
+		private: System::Void VentanaModulos_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+
+			if (this->dragging) {
+
+				Point currentScreenPos = PointToScreen(e->Location);
+				Location = Point(currentScreenPos.X - this->offset.X,
+				currentScreenPos.Y - this->offset.Y);
+
+			}
+		}
+
+		private: System::Void VentanaModulos_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+
+
+			this->dragging = true;
+			this->offset = Point(e->X, e->Y);
+
+		}
+
+		private: System::Void btnSalir_Click(System::Object^  sender, System::EventArgs^  e) {
+
+			this->Close();
+
+		}
+};
 }
