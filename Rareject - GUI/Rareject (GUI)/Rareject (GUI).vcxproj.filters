@@ -64,6 +64,9 @@
     <EmbeddedResource Include="VentanaAcercaDe.resx">
       <Filter>Archivos de recursos</Filter>
     </EmbeddedResource>
+    <EmbeddedResource Include="VentanaModulos.resx">
+      <Filter>Archivos de recursos</Filter>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Rareject (GUI).rc">
@@ -72,6 +75,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\rareject.ico">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="rareject.ico">
       <Filter>Archivos de recursos</Filter>
     </Image>
   </ItemGroup>

@@ -163,7 +163,7 @@ namespace RarejectGUI {
 			this->MaximizeBox = false;
 			this->Name = L"VentanaOpcionesAvanzadas";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
-			this->Text = L"VentanaOpcionesAvanzadas";
+			this->Text = L"Opciones Avanzadas";
 			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaOpcionesAvanzadas::VentanaOpcionesAvanzadas_MouseDown);
 			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaOpcionesAvanzadas::VentanaOpcionesAvanzadas_MouseMove);
 			this->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaOpcionesAvanzadas::VentanaOpcionesAvanzadas_MouseUp);
