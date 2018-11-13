@@ -42,6 +42,7 @@ namespace RarejectGUI {
 			}
 		}
 
+	public: bool Proceso_Elegido = false;
 	private: System::Windows::Forms::ListBox^  listaProcesos;
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::TextBox^  txtPID;
@@ -50,23 +51,7 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::TextBox^ pidTextBox;
 	private: bool dragging;
 	private: Point offset;
-	public: bool Proceso_Elegido = false;
-
-	protected:
-
-	protected:
-
-	protected:
-
-	protected:
-
-	protected:
-
-	protected:
-
-	private:
-
-		System::ComponentModel::Container ^components;
+	private: System::ComponentModel::Container ^components;
 
 
 #pragma region Windows Form Designer generated code
@@ -289,17 +274,15 @@ namespace RarejectGUI {
 			PROCESSENTRY32* processInfo = new PROCESSENTRY32;
 
 			processInfo->dwSize = sizeof(PROCESSENTRY32);
-			int index = 0;
+			Process32Next(hSnapShot, processInfo);	//Se salta el primer proceso
 
 			while (Process32Next(hSnapShot, processInfo) != FALSE) {
 				typedef BOOL(WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 				int pid = processInfo->th32ProcessID;
 
 				HANDLE proceso = OpenProcess(PROCESS_QUERY_INFORMATION, false, pid);
-				
-				String ^architecture;
-				BOOL isWin32 = false;
 
+				BOOL isWin32 = false;
 				String^ name = gcnew String(processInfo->szExeFile);
 				String^ processinfo;
 
@@ -342,9 +325,6 @@ namespace RarejectGUI {
 				currentScreenPos.Y - this->offset.Y);
 
 			}
-
-
-}
-	
+		}
 	};
 }
