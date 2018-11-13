@@ -157,7 +157,7 @@ namespace RarejectGUI {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"VentanaAcercaDe";
-			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Acerca De";
 			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaAcercaDe::VentanaAcercaDe_MouseDown);
 			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaAcercaDe::VentanaAcercaDe_MouseMove);

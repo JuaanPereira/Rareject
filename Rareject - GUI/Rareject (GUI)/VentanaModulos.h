@@ -115,7 +115,7 @@ namespace RarejectGUI {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"VentanaModulos";
-			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Módulos del proceso...";
 			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaModulos::VentanaModulos_MouseDown);
 			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaModulos::VentanaModulos_MouseMove);
@@ -177,10 +177,10 @@ namespace RarejectGUI {
 			this->Controls->Add(this->listaModulos);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Name = L"VentanaModulos";
-			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->label1->Text = L"- Módulos cargados en el proceso:";
 			this->Text = L"Módulos del proceso...";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaModulos::VentanaModulos_MouseDown);
 			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaModulos::VentanaModulos_MouseMove);
 			this->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &VentanaModulos::VentanaModulos_MouseUp);
