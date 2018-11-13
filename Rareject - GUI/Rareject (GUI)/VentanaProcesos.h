@@ -65,9 +65,6 @@ namespace RarejectGUI {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
-			// 
-			// listaProcesos
-			// 
 			this->listaProcesos->BackColor = System::Drawing::SystemColors::WindowText;
 			this->listaProcesos->ForeColor = System::Drawing::Color::Cyan;
 			this->listaProcesos->FormattingEnabled = true;
@@ -78,9 +75,6 @@ namespace RarejectGUI {
 			this->listaProcesos->TabIndex = 0;
 			this->listaProcesos->SelectedIndexChanged += gcnew System::EventHandler(this, &VentanaProcesos::listaProcesos_SelectedIndexChanged);
 			this->listaProcesos->DoubleClick += gcnew System::EventHandler(this, &VentanaProcesos::btnFinalizar_Click);
-			// 
-			// button1
-			// 
 			this->button1->BackColor = System::Drawing::Color::Black;
 			this->button1->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->button1->ForeColor = System::Drawing::Color::Cyan;
@@ -91,17 +85,11 @@ namespace RarejectGUI {
 			this->button1->Text = L"Finalizar";
 			this->button1->UseVisualStyleBackColor = false;
 			this->button1->Click += gcnew System::EventHandler(this, &VentanaProcesos::btnFinalizar_Click);
-			// 
-			// txtPID
-			// 
 			this->txtPID->Enabled = false;
 			this->txtPID->Location = System::Drawing::Point(26, 188);
 			this->txtPID->Name = L"txtPID";
 			this->txtPID->Size = System::Drawing::Size(221, 20);
 			this->txtPID->TabIndex = 2;
-			// 
-			// label1
-			// 
 			this->label1->AutoSize = true;
 			this->label1->ForeColor = System::Drawing::Color::Cyan;
 			this->label1->Location = System::Drawing::Point(23, 7);
@@ -109,9 +97,6 @@ namespace RarejectGUI {
 			this->label1->Size = System::Drawing::Size(25, 13);
 			this->label1->TabIndex = 3;
 			this->label1->Text = L"PID";
-			// 
-			// label2
-			// 
 			this->label2->AutoSize = true;
 			this->label2->BackColor = System::Drawing::Color::Transparent;
 			this->label2->ForeColor = System::Drawing::Color::Cyan;
@@ -120,9 +105,6 @@ namespace RarejectGUI {
 			this->label2->Size = System::Drawing::Size(102, 13);
 			this->label2->TabIndex = 4;
 			this->label2->Text = L"Nombre del proceso";
-			// 
-			// VentanaProcesos
-			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::ActiveCaptionText;
@@ -163,6 +145,8 @@ namespace RarejectGUI {
 			this->listaProcesos->ForeColor = System::Drawing::Color::Cyan;
 			this->listaProcesos->FormattingEnabled = true;
 			this->listaProcesos->HorizontalScrollbar = true;
+			this->listaProcesos->HorizontalExtent = 0;
+			this->listaProcesos->IntegralHeight = true;
 			this->listaProcesos->Location = System::Drawing::Point(26, 22);
 			this->listaProcesos->Name = L"listaProcesos";
 			this->listaProcesos->Size = System::Drawing::Size(221, 147);
@@ -295,6 +279,8 @@ namespace RarejectGUI {
 
 				listaProcesos->Items->Add(processinfo);
 			}
+			
+			updateHorizontalScrollbar();
 		}
 
 		private: System::Void VentanaProcesos_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
@@ -325,6 +311,10 @@ namespace RarejectGUI {
 				currentScreenPos.Y - this->offset.Y);
 
 			}
+		}
+
+		private: void updateHorizontalScrollbar() {
+			 
 		}
 	};
 }
