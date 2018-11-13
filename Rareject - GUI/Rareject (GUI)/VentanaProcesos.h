@@ -257,18 +257,33 @@ namespace RarejectGUI {
 		}
 
 		private: System::Void VentanaProcesos_Load(System::Object^  sender, System::EventArgs^  e) {
+			typedef BOOL(WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL); 
+			LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process"); //Recibe la función del kernel que permite saber si un proceso (32 bits) se está ejecutando bajo el subsistema WoW64
 
-			HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); /*Creamos snapshot de los procesos activos actualmente*/
+			HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0); //Creamos snapshot de los procesos activos actualmente
 			PROCESSENTRY32* processInfo = new PROCESSENTRY32;
 
 			processInfo->dwSize = sizeof(PROCESSENTRY32);
 			int index = 0;
 
 			while (Process32Next(hSnapShot, processInfo) != FALSE) {
-
+				typedef BOOL(WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 				int pid = processInfo->th32ProcessID;
+
+				HANDLE proceso = OpenProcess(PROCESS_QUERY_INFORMATION, false, pid);
+				
+				String ^architecture;
+				BOOL isWin32 = false;
+
 				String^ name = gcnew String(processInfo->szExeFile);
-				String^ processinfo = pid + " (" + name + ")";
+				String^ processinfo;
+
+				if (fnIsWow64Process(proceso, &isWin32)) {
+					if (isWin32)
+						processinfo = pid + " (" + name + ")" + " - 32 bits";
+					else
+						processinfo = pid + " (" + name + ")";
+				}
 
 				listaProcesos->Items->Add(processinfo);
 			}
