@@ -314,7 +314,18 @@ namespace RarejectGUI {
 		}
 
 		private: void updateHorizontalScrollbar() {
-			 
+			Graphics ^graphics = listaProcesos->CreateGraphics();
+			
+			int index = 0;
+			int stringLength = 0;
+			for (int i = 0; i < listaProcesos->Items->Count - 1; i++) {
+				if (listaProcesos->Items[i]->ToString()->Length > stringLength) {
+					index = i;
+					stringLength = listaProcesos->Items[i]->ToString()->Length;
+				}
+			}
+
+			listaProcesos->HorizontalExtent = (int) graphics->MeasureString(listaProcesos->Items[index]->ToString(), listaProcesos->Font).Width;
 		}
 	};
 }
