@@ -195,16 +195,8 @@ namespace RarejectGUI {
 		
 
 		private: System::Void VentanaModulos_Load(System::Object^ sender, System::EventArgs^ e) {
-			HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, this->PID); //Creamos snapshot del proceso para poder recibir su nombre
-			PROCESSENTRY32* processInfo = new PROCESSENTRY32;
-
-			processInfo->dwSize = sizeof(PROCESSENTRY32);
-
-			if(Process32First(hSnapShot, processInfo))
-				this->Text = gcnew String(processInfo->szExeFile);
-
-			
-			hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, this->PID); //Creamos snapshot de los módulos del proceso
+		
+			HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, this->PID); //Creamos snapshot de los módulos del proceso
 			MODULEENTRY32* moduleInfo = new MODULEENTRY32;
 
 			moduleInfo->dwSize = sizeof(MODULEENTRY32);
