@@ -198,11 +198,12 @@ namespace RarejectGUI {
 			
 				tbTime->Enabled = true;
 
+
 			}
 			else if (!cbInjectionTimer->Checked) {
 			
 				tbTime->Enabled = false;
-
+				Tiempo_Segundos = 0;
 			}
 
 		}

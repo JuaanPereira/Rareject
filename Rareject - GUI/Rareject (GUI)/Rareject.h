@@ -49,13 +49,13 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::Label^  lblTimerStatus;
 	private: System::Windows::Forms::Label^  lblTiempoEspera;
 	private: System::Windows::Forms::Button^  btnAcercaDe;
+	private: System::Windows::Forms::Button^  btnModulos;
+	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
+	private: System::Windows::Forms::Timer^  tmInyeccion;
 	private: System::ComponentModel::IContainer^  components;
 	private: bool currentCheckState = false;
 	private: bool currentCBTimerState = false;
-	private: System::Windows::Forms::Button^  btnModulos;
-	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
 	private: Point offset;
-	private: System::Windows::Forms::Timer^  tmInyeccion;
 	private: bool dragging;
 	private: HANDLE Proceso;
 	private: const char *NOMBRE_DLL;
@@ -64,257 +64,258 @@ namespace RarejectGUI {
 
 	void InitializeComponent(void)
 			 {
-				 this->components = (gcnew System::ComponentModel::Container());
-				 System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Rareject::typeid));
-				 this->btnProcesos = (gcnew System::Windows::Forms::Button());
-				 this->label4 = (gcnew System::Windows::Forms::Label());
-				 this->label5 = (gcnew System::Windows::Forms::Label());
-				 this->txtRuta = (gcnew System::Windows::Forms::TextBox());
-				 this->btnBuscar = (gcnew System::Windows::Forms::Button());
-				 this->btnInyectar = (gcnew System::Windows::Forms::Button());
-				 this->txtPID = (gcnew System::Windows::Forms::TextBox());
-				 this->label1 = (gcnew System::Windows::Forms::Label());
-				 this->btnOpcionesAvanzadas = (gcnew System::Windows::Forms::Button());
-				 this->btnCerrar = (gcnew System::Windows::Forms::Button());
-				 this->label2 = (gcnew System::Windows::Forms::Label());
-				 this->lblCloseInject = (gcnew System::Windows::Forms::Label());
-				 this->lblTimerStatus = (gcnew System::Windows::Forms::Label());
-				 this->lblTiempoEspera = (gcnew System::Windows::Forms::Label());
-				 this->btnAcercaDe = (gcnew System::Windows::Forms::Button());
-				 this->btnModulos = (gcnew System::Windows::Forms::Button());
-				 this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
-				 this->tmInyeccion = (gcnew System::Windows::Forms::Timer(this->components));
-				 this->SuspendLayout();
-				 // 
-				 // btnProcesos
-				 // 
-				 this->btnProcesos->BackColor = System::Drawing::Color::Black;
-				 this->btnProcesos->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
-				 this->btnProcesos->ForeColor = System::Drawing::Color::Cyan;
-				 this->btnProcesos->Location = System::Drawing::Point(15, 191);
-				 this->btnProcesos->Name = L"btnProcesos";
-				 this->btnProcesos->Size = System::Drawing::Size(139, 34);
-				 this->btnProcesos->TabIndex = 3;
-				 this->btnProcesos->Text = L"Buscar proceso";
-				 this->btnProcesos->UseVisualStyleBackColor = false;
-				 this->btnProcesos->Click += gcnew System::EventHandler(this, &Rareject::btnProcesos_Click);
-				 // 
-				 // label4
-				 // 
-				 this->label4->AutoSize = true;
-				 this->label4->BackColor = System::Drawing::SystemColors::MenuText;
-				 this->label4->ForeColor = System::Drawing::Color::Cyan;
-				 this->label4->Location = System::Drawing::Point(12, 130);
-				 this->label4->Name = L"label4";
-				 this->label4->Size = System::Drawing::Size(37, 13);
-				 this->label4->TabIndex = 4;
-				 this->label4->Text = L"- PID :";
-				 // 
-				 // label5
-				 // 
-				 this->label5->AutoSize = true;
-				 this->label5->BackColor = System::Drawing::SystemColors::MenuText;
-				 this->label5->Cursor = System::Windows::Forms::Cursors::Arrow;
-				 this->label5->ForeColor = System::Drawing::Color::Cyan;
-				 this->label5->Location = System::Drawing::Point(12, 100);
-				 this->label5->Name = L"label5";
-				 this->label5->Size = System::Drawing::Size(65, 13);
-				 this->label5->TabIndex = 5;
-				 this->label5->Text = L"- Ruta DLL: ";
-				 // 
-				 // txtRuta
-				 // 
-				 this->txtRuta->Enabled = false;
-				 this->txtRuta->Location = System::Drawing::Point(93, 97);
-				 this->txtRuta->Name = L"txtRuta";
-				 this->txtRuta->Size = System::Drawing::Size(216, 20);
-				 this->txtRuta->TabIndex = 6;
-				 this->txtRuta->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-				 // 
-				 // btnBuscar
-				 // 
-				 this->btnBuscar->BackColor = System::Drawing::Color::Black;
-				 this->btnBuscar->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
-				 this->btnBuscar->ForeColor = System::Drawing::Color::Cyan;
-				 this->btnBuscar->Location = System::Drawing::Point(171, 191);
-				 this->btnBuscar->Name = L"btnBuscar";
-				 this->btnBuscar->Size = System::Drawing::Size(139, 34);
-				 this->btnBuscar->TabIndex = 7;
-				 this->btnBuscar->Text = L"Buscar DLL";
-				 this->btnBuscar->UseVisualStyleBackColor = false;
-				 this->btnBuscar->Click += gcnew System::EventHandler(this, &Rareject::btnBuscar_Click);
-				 // 
-				 // btnInyectar
-				 // 
-				 this->btnInyectar->BackColor = System::Drawing::Color::Black;
-				 this->btnInyectar->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
-				 this->btnInyectar->ForeColor = System::Drawing::Color::Cyan;
-				 this->btnInyectar->Location = System::Drawing::Point(170, 326);
-				 this->btnInyectar->Name = L"btnInyectar";
-				 this->btnInyectar->Size = System::Drawing::Size(139, 33);
-				 this->btnInyectar->TabIndex = 8;
-				 this->btnInyectar->Text = L"Inyectar";
-				 this->btnInyectar->UseVisualStyleBackColor = false;
-				 this->btnInyectar->Click += gcnew System::EventHandler(this, &Rareject::btnInyectar_Click);
-				 // 
-				 // txtPID
-				 // 
-				 this->txtPID->Enabled = false;
-				 this->txtPID->Location = System::Drawing::Point(93, 127);
-				 this->txtPID->Name = L"txtPID";
-				 this->txtPID->Size = System::Drawing::Size(61, 20);
-				 this->txtPID->TabIndex = 9;
-				 this->txtPID->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-				 // 
-				 // label1
-				 // 
-				 this->label1->AutoSize = true;
-				 this->label1->BackColor = System::Drawing::SystemColors::MenuText;
-				 this->label1->ForeColor = System::Drawing::Color::Cyan;
-				 this->label1->Location = System::Drawing::Point(12, 285);
-				 this->label1->Name = L"label1";
-				 this->label1->Size = System::Drawing::Size(0, 13);
-				 this->label1->TabIndex = 11;
-				 this->label1->TextAlign = System::Drawing::ContentAlignment::TopCenter;
-				 // 
-				 // btnOpcionesAvanzadas
-				 // 
-				 this->btnOpcionesAvanzadas->BackColor = System::Drawing::Color::Black;
-				 this->btnOpcionesAvanzadas->Location = System::Drawing::Point(171, 125);
-				 this->btnOpcionesAvanzadas->Name = L"btnOpcionesAvanzadas";
-				 this->btnOpcionesAvanzadas->Size = System::Drawing::Size(138, 22);
-				 this->btnOpcionesAvanzadas->TabIndex = 14;
-				 this->btnOpcionesAvanzadas->Text = L"Opciones avanzadas...";
-				 this->btnOpcionesAvanzadas->UseVisualStyleBackColor = false;
-				 this->btnOpcionesAvanzadas->Click += gcnew System::EventHandler(this, &Rareject::btnOpcionesAvanzadas_Click);
-				 // 
-				 // btnCerrar
-				 // 
-				 this->btnCerrar->BackColor = System::Drawing::SystemColors::MenuText;
-				 this->btnCerrar->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btnCerrar.BackgroundImage")));
-				 this->btnCerrar->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
-				 this->btnCerrar->Location = System::Drawing::Point(15, 326);
-				 this->btnCerrar->Name = L"btnCerrar";
-				 this->btnCerrar->Size = System::Drawing::Size(34, 33);
-				 this->btnCerrar->TabIndex = 13;
-				 this->btnCerrar->UseVisualStyleBackColor = false;
-				 this->btnCerrar->Click += gcnew System::EventHandler(this, &Rareject::btnCerrar_Click);
-				 // 
-				 // label2
-				 // 
-				 this->label2->AutoSize = true;
-				 this->label2->BackColor = System::Drawing::SystemColors::MenuText;
-				 this->label2->ForeColor = System::Drawing::Color::Cyan;
-				 this->label2->Location = System::Drawing::Point(168, 266);
-				 this->label2->Name = L"label2";
-				 this->label2->Size = System::Drawing::Size(86, 13);
-				 this->label2->TabIndex = 15;
-				 this->label2->Text = L"- Close on Inject:";
-				 // 
-				 // lblCloseInject
-				 // 
-				 this->lblCloseInject->AutoSize = true;
-				 this->lblCloseInject->BackColor = System::Drawing::SystemColors::MenuText;
-				 this->lblCloseInject->ForeColor = System::Drawing::Color::Yellow;
-				 this->lblCloseInject->Location = System::Drawing::Point(253, 266);
-				 this->lblCloseInject->Name = L"lblCloseInject";
-				 this->lblCloseInject->Size = System::Drawing::Size(57, 13);
-				 this->lblCloseInject->TabIndex = 16;
-				 this->lblCloseInject->Text = L"INACTIVO";
-				 // 
-				 // lblTimerStatus
-				 // 
-				 this->lblTimerStatus->AutoSize = true;
-				 this->lblTimerStatus->BackColor = System::Drawing::SystemColors::MenuText;
-				 this->lblTimerStatus->ForeColor = System::Drawing::Color::Cyan;
-				 this->lblTimerStatus->Location = System::Drawing::Point(168, 245);
-				 this->lblTimerStatus->Name = L"lblTimerStatus";
-				 this->lblTimerStatus->Size = System::Drawing::Size(107, 13);
-				 this->lblTimerStatus->TabIndex = 17;
-				 this->lblTimerStatus->Text = L"- Esperar (segundos):";
-				 // 
-				 // lblTiempoEspera
-				 // 
-				 this->lblTiempoEspera->AutoSize = true;
-				 this->lblTiempoEspera->BackColor = System::Drawing::SystemColors::MenuText;
-				 this->lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
-				 this->lblTiempoEspera->Location = System::Drawing::Point(279, 245);
-				 this->lblTiempoEspera->Name = L"lblTiempoEspera";
-				 this->lblTiempoEspera->Size = System::Drawing::Size(13, 13);
-				 this->lblTiempoEspera->TabIndex = 18;
-				 this->lblTiempoEspera->Text = L"0";
-				 // 
-				 // btnAcercaDe
-				 // 
-				 this->btnAcercaDe->BackColor = System::Drawing::SystemColors::MenuText;
-				 this->btnAcercaDe->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btnAcercaDe.BackgroundImage")));
-				 this->btnAcercaDe->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
-				 this->btnAcercaDe->ForeColor = System::Drawing::Color::Cyan;
-				 this->btnAcercaDe->Location = System::Drawing::Point(55, 326);
-				 this->btnAcercaDe->Name = L"btnAcercaDe";
-				 this->btnAcercaDe->Size = System::Drawing::Size(34, 33);
-				 this->btnAcercaDe->TabIndex = 19;
-				 this->btnAcercaDe->UseVisualStyleBackColor = false;
-				 this->btnAcercaDe->Click += gcnew System::EventHandler(this, &Rareject::btnAcercaDe_Click);
-				 // 
-				 // btnModulos
-				 // 
-				 this->btnModulos->BackColor = System::Drawing::Color::Black;
-				 this->btnModulos->Location = System::Drawing::Point(15, 245);
-				 this->btnModulos->Name = L"btnModulos";
-				 this->btnModulos->Size = System::Drawing::Size(139, 34);
-				 this->btnModulos->TabIndex = 20;
-				 this->btnModulos->Text = L"Ver módulos del proceso";
-				 this->btnModulos->UseVisualStyleBackColor = false;
-				 this->btnModulos->Click += gcnew System::EventHandler(this, &Rareject::btnModulos_Click);
-				 // 
-				 // openFileDialog1
-				 // 
-				 this->openFileDialog1->DefaultExt = L"dll";
-				 this->openFileDialog1->Filter = L"Biblioteca dinámica (*.dll)|*.dll";
-				 // 
-				 // tmInyeccion
-				 // 
-				 this->tmInyeccion->Interval = 1000;
-				 // 
-				 // Rareject
-				 // 
-				 this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
-				 this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-				 this->BackColor = System::Drawing::SystemColors::MenuHighlight;
-				 this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
-				 this->ClientSize = System::Drawing::Size(325, 371);
-				 this->Controls->Add(this->btnModulos);
-				 this->Controls->Add(this->btnAcercaDe);
-				 this->Controls->Add(this->lblTiempoEspera);
-				 this->Controls->Add(this->lblTimerStatus);
-				 this->Controls->Add(this->lblCloseInject);
-				 this->Controls->Add(this->label2);
-				 this->Controls->Add(this->btnOpcionesAvanzadas);
-				 this->Controls->Add(this->btnCerrar);
-				 this->Controls->Add(this->label1);
-				 this->Controls->Add(this->txtPID);
-				 this->Controls->Add(this->btnInyectar);
-				 this->Controls->Add(this->btnBuscar);
-				 this->Controls->Add(this->txtRuta);
-				 this->Controls->Add(this->label5);
-				 this->Controls->Add(this->label4);
-				 this->Controls->Add(this->btnProcesos);
-				 this->Cursor = System::Windows::Forms::Cursors::Arrow;
-				 this->ForeColor = System::Drawing::Color::Cyan;
-				 this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
-				 this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
-				 this->Name = L"Rareject";
-				 this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
-				 this->Text = L"Rareject";
-				 this->Load += gcnew System::EventHandler(this, &Rareject::Rareject_Load);
-				 this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Rareject::Rareject_MouseDown);
-				 this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Rareject::Rareject_MouseMove);
-				 this->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &Rareject::Rareject_MouseUp);
-				 this->ResumeLayout(false);
-				 this->PerformLayout();
+		this->components = (gcnew System::ComponentModel::Container());
+		System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Rareject::typeid));
+		this->btnProcesos = (gcnew System::Windows::Forms::Button());
+		this->label4 = (gcnew System::Windows::Forms::Label());
+		this->label5 = (gcnew System::Windows::Forms::Label());
+		this->txtRuta = (gcnew System::Windows::Forms::TextBox());
+		this->btnBuscar = (gcnew System::Windows::Forms::Button());
+		this->btnInyectar = (gcnew System::Windows::Forms::Button());
+		this->txtPID = (gcnew System::Windows::Forms::TextBox());
+		this->label1 = (gcnew System::Windows::Forms::Label());
+		this->btnOpcionesAvanzadas = (gcnew System::Windows::Forms::Button());
+		this->btnCerrar = (gcnew System::Windows::Forms::Button());
+		this->label2 = (gcnew System::Windows::Forms::Label());
+		this->lblCloseInject = (gcnew System::Windows::Forms::Label());
+		this->lblTimerStatus = (gcnew System::Windows::Forms::Label());
+		this->lblTiempoEspera = (gcnew System::Windows::Forms::Label());
+		this->btnAcercaDe = (gcnew System::Windows::Forms::Button());
+		this->btnModulos = (gcnew System::Windows::Forms::Button());
+		this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
+		this->tmInyeccion = (gcnew System::Windows::Forms::Timer(this->components));
+		this->SuspendLayout();
+		// 
+		// btnProcesos
+		// 
+		this->btnProcesos->BackColor = System::Drawing::Color::Black;
+		this->btnProcesos->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
+		this->btnProcesos->ForeColor = System::Drawing::Color::Cyan;
+		this->btnProcesos->Location = System::Drawing::Point(15, 191);
+		this->btnProcesos->Name = L"btnProcesos";
+		this->btnProcesos->Size = System::Drawing::Size(139, 34);
+		this->btnProcesos->TabIndex = 3;
+		this->btnProcesos->Text = L"Buscar proceso";
+		this->btnProcesos->UseVisualStyleBackColor = false;
+		this->btnProcesos->Click += gcnew System::EventHandler(this, &Rareject::btnProcesos_Click);
+		// 
+		// label4
+		// 
+		this->label4->AutoSize = true;
+		this->label4->BackColor = System::Drawing::SystemColors::MenuText;
+		this->label4->ForeColor = System::Drawing::Color::Cyan;
+		this->label4->Location = System::Drawing::Point(12, 130);
+		this->label4->Name = L"label4";
+		this->label4->Size = System::Drawing::Size(37, 13);
+		this->label4->TabIndex = 4;
+		this->label4->Text = L"- PID :";
+		// 
+		// label5
+		// 
+		this->label5->AutoSize = true;
+		this->label5->BackColor = System::Drawing::SystemColors::MenuText;
+		this->label5->Cursor = System::Windows::Forms::Cursors::Arrow;
+		this->label5->ForeColor = System::Drawing::Color::Cyan;
+		this->label5->Location = System::Drawing::Point(12, 100);
+		this->label5->Name = L"label5";
+		this->label5->Size = System::Drawing::Size(65, 13);
+		this->label5->TabIndex = 5;
+		this->label5->Text = L"- Ruta DLL: ";
+		// 
+		// txtRuta
+		// 
+		this->txtRuta->Enabled = false;
+		this->txtRuta->Location = System::Drawing::Point(93, 97);
+		this->txtRuta->Name = L"txtRuta";
+		this->txtRuta->Size = System::Drawing::Size(216, 20);
+		this->txtRuta->TabIndex = 6;
+		this->txtRuta->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+		// 
+		// btnBuscar
+		// 
+		this->btnBuscar->BackColor = System::Drawing::Color::Black;
+		this->btnBuscar->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
+		this->btnBuscar->ForeColor = System::Drawing::Color::Cyan;
+		this->btnBuscar->Location = System::Drawing::Point(171, 191);
+		this->btnBuscar->Name = L"btnBuscar";
+		this->btnBuscar->Size = System::Drawing::Size(139, 34);
+		this->btnBuscar->TabIndex = 7;
+		this->btnBuscar->Text = L"Buscar DLL";
+		this->btnBuscar->UseVisualStyleBackColor = false;
+		this->btnBuscar->Click += gcnew System::EventHandler(this, &Rareject::btnBuscar_Click);
+		// 
+		// btnInyectar
+		// 
+		this->btnInyectar->BackColor = System::Drawing::Color::Black;
+		this->btnInyectar->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
+		this->btnInyectar->ForeColor = System::Drawing::Color::Cyan;
+		this->btnInyectar->Location = System::Drawing::Point(170, 326);
+		this->btnInyectar->Name = L"btnInyectar";
+		this->btnInyectar->Size = System::Drawing::Size(139, 33);
+		this->btnInyectar->TabIndex = 8;
+		this->btnInyectar->Text = L"Inyectar";
+		this->btnInyectar->UseVisualStyleBackColor = false;
+		this->btnInyectar->Click += gcnew System::EventHandler(this, &Rareject::btnInyectar_Click);
+		// 
+		// txtPID
+		// 
+		this->txtPID->Enabled = false;
+		this->txtPID->Location = System::Drawing::Point(93, 127);
+		this->txtPID->Name = L"txtPID";
+		this->txtPID->Size = System::Drawing::Size(61, 20);
+		this->txtPID->TabIndex = 9;
+		this->txtPID->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+		// 
+		// label1
+		// 
+		this->label1->AutoSize = true;
+		this->label1->BackColor = System::Drawing::SystemColors::MenuText;
+		this->label1->ForeColor = System::Drawing::Color::Cyan;
+		this->label1->Location = System::Drawing::Point(12, 285);
+		this->label1->Name = L"label1";
+		this->label1->Size = System::Drawing::Size(0, 13);
+		this->label1->TabIndex = 11;
+		this->label1->TextAlign = System::Drawing::ContentAlignment::TopCenter;
+		// 
+		// btnOpcionesAvanzadas
+		// 
+		this->btnOpcionesAvanzadas->BackColor = System::Drawing::Color::Black;
+		this->btnOpcionesAvanzadas->Location = System::Drawing::Point(171, 125);
+		this->btnOpcionesAvanzadas->Name = L"btnOpcionesAvanzadas";
+		this->btnOpcionesAvanzadas->Size = System::Drawing::Size(138, 22);
+		this->btnOpcionesAvanzadas->TabIndex = 14;
+		this->btnOpcionesAvanzadas->Text = L"Opciones avanzadas...";
+		this->btnOpcionesAvanzadas->UseVisualStyleBackColor = false;
+		this->btnOpcionesAvanzadas->Click += gcnew System::EventHandler(this, &Rareject::btnOpcionesAvanzadas_Click);
+		// 
+		// btnCerrar
+		// 
+		this->btnCerrar->BackColor = System::Drawing::SystemColors::MenuText;
+		this->btnCerrar->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btnCerrar.BackgroundImage")));
+		this->btnCerrar->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
+		this->btnCerrar->Location = System::Drawing::Point(15, 326);
+		this->btnCerrar->Name = L"btnCerrar";
+		this->btnCerrar->Size = System::Drawing::Size(34, 33);
+		this->btnCerrar->TabIndex = 13;
+		this->btnCerrar->UseVisualStyleBackColor = false;
+		this->btnCerrar->Click += gcnew System::EventHandler(this, &Rareject::btnCerrar_Click);
+		// 
+		// label2
+		// 
+		this->label2->AutoSize = true;
+		this->label2->BackColor = System::Drawing::SystemColors::MenuText;
+		this->label2->ForeColor = System::Drawing::Color::Cyan;
+		this->label2->Location = System::Drawing::Point(168, 266);
+		this->label2->Name = L"label2";
+		this->label2->Size = System::Drawing::Size(86, 13);
+		this->label2->TabIndex = 15;
+		this->label2->Text = L"- Close on Inject:";
+		// 
+		// lblCloseInject
+		// 
+		this->lblCloseInject->AutoSize = true;
+		this->lblCloseInject->BackColor = System::Drawing::SystemColors::MenuText;
+		this->lblCloseInject->ForeColor = System::Drawing::Color::Yellow;
+		this->lblCloseInject->Location = System::Drawing::Point(253, 266);
+		this->lblCloseInject->Name = L"lblCloseInject";
+		this->lblCloseInject->Size = System::Drawing::Size(57, 13);
+		this->lblCloseInject->TabIndex = 16;
+		this->lblCloseInject->Text = L"INACTIVO";
+		// 
+		// lblTimerStatus
+		// 
+		this->lblTimerStatus->AutoSize = true;
+		this->lblTimerStatus->BackColor = System::Drawing::SystemColors::MenuText;
+		this->lblTimerStatus->ForeColor = System::Drawing::Color::Cyan;
+		this->lblTimerStatus->Location = System::Drawing::Point(168, 245);
+		this->lblTimerStatus->Name = L"lblTimerStatus";
+		this->lblTimerStatus->Size = System::Drawing::Size(107, 13);
+		this->lblTimerStatus->TabIndex = 17;
+		this->lblTimerStatus->Text = L"- Esperar (segundos):";
+		// 
+		// lblTiempoEspera
+		// 
+		this->lblTiempoEspera->AutoSize = true;
+		this->lblTiempoEspera->BackColor = System::Drawing::SystemColors::MenuText;
+		this->lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
+		this->lblTiempoEspera->Location = System::Drawing::Point(279, 245);
+		this->lblTiempoEspera->Name = L"lblTiempoEspera";
+		this->lblTiempoEspera->Size = System::Drawing::Size(13, 13);
+		this->lblTiempoEspera->TabIndex = 18;
+		this->lblTiempoEspera->Text = L"0";
+		// 
+		// btnAcercaDe
+		// 
+		this->btnAcercaDe->BackColor = System::Drawing::SystemColors::MenuText;
+		this->btnAcercaDe->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"btnAcercaDe.BackgroundImage")));
+		this->btnAcercaDe->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
+		this->btnAcercaDe->ForeColor = System::Drawing::Color::Cyan;
+		this->btnAcercaDe->Location = System::Drawing::Point(55, 326);
+		this->btnAcercaDe->Name = L"btnAcercaDe";
+		this->btnAcercaDe->Size = System::Drawing::Size(34, 33);
+		this->btnAcercaDe->TabIndex = 19;
+		this->btnAcercaDe->UseVisualStyleBackColor = false;
+		this->btnAcercaDe->Click += gcnew System::EventHandler(this, &Rareject::btnAcercaDe_Click);
+		// 
+		// btnModulos
+		// 
+		this->btnModulos->BackColor = System::Drawing::Color::Black;
+		this->btnModulos->Location = System::Drawing::Point(15, 245);
+		this->btnModulos->Name = L"btnModulos";
+		this->btnModulos->Size = System::Drawing::Size(139, 34);
+		this->btnModulos->TabIndex = 20;
+		this->btnModulos->Text = L"Ver módulos del proceso";
+		this->btnModulos->UseVisualStyleBackColor = false;
+		this->btnModulos->Click += gcnew System::EventHandler(this, &Rareject::btnModulos_Click);
+		// 
+		// openFileDialog1
+		// 
+		this->openFileDialog1->DefaultExt = L"dll";
+		this->openFileDialog1->Filter = L"Biblioteca dinámica (*.dll)|*.dll";
+		// 
+		// tmInyeccion
+		// 
+		this->tmInyeccion->Interval = 1000;
+		this->tmInyeccion->Tick += gcnew System::EventHandler(this, &Rareject::Tick_Increaser);
+		// 
+		// Rareject
+		// 
+		this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+		this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+		this->BackColor = System::Drawing::SystemColors::MenuHighlight;
+		this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
+		this->ClientSize = System::Drawing::Size(325, 371);
+		this->Controls->Add(this->btnModulos);
+		this->Controls->Add(this->btnAcercaDe);
+		this->Controls->Add(this->lblTiempoEspera);
+		this->Controls->Add(this->lblTimerStatus);
+		this->Controls->Add(this->lblCloseInject);
+		this->Controls->Add(this->label2);
+		this->Controls->Add(this->btnOpcionesAvanzadas);
+		this->Controls->Add(this->btnCerrar);
+		this->Controls->Add(this->label1);
+		this->Controls->Add(this->txtPID);
+		this->Controls->Add(this->btnInyectar);
+		this->Controls->Add(this->btnBuscar);
+		this->Controls->Add(this->txtRuta);
+		this->Controls->Add(this->label5);
+		this->Controls->Add(this->label4);
+		this->Controls->Add(this->btnProcesos);
+		this->Cursor = System::Windows::Forms::Cursors::Arrow;
+		this->ForeColor = System::Drawing::Color::Cyan;
+		this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
+		this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+		this->Name = L"Rareject";
+		this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+		this->Text = L"Rareject";
+		this->Load += gcnew System::EventHandler(this, &Rareject::Rareject_Load);
+		this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Rareject::Rareject_MouseDown);
+		this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Rareject::Rareject_MouseMove);
+		this->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &Rareject::Rareject_MouseUp);
+		this->ResumeLayout(false);
+		this->PerformLayout();
 
-			 }
+	}
 
 
 	VentanaProcesos ^ Vent_Proc;
@@ -346,6 +347,9 @@ namespace RarejectGUI {
 	}
 
 	private: System::Void btnOpcionesAvanzadas_Click(System::Object^  sender, System::EventArgs^  e) {
+		tmInyeccion->Stop(); //Detiene el timer si se estaba ejecutando
+		Tiempo_Transcurrido = 0; //Reinicia el contador del timer
+		lblTimerStatus->Text = "- Esperar (segundos):";
 		int currentTBTimerValue = System::Convert::ToInt32(lblTiempoEspera->Text); //Recibe el valor actual indicado al usuario para el tiempo que se tardará en inyectar la DLL
 
 		/*Inicializa la ventana de opciones avanzadas con los parámetros que teníamos previamente, como el estado de los checkbox de "Cerrar tras inyectar" o
@@ -410,25 +414,18 @@ namespace RarejectGUI {
 
 			if (Opc_Av && Opc_Av->Tiempo_Segundos > 0) {
 
-				tmInyeccion = gcnew Timer();
+				lblTimerStatus->Text = "- Tiempo restante:";
 
-				tmInyeccion->Interval = 1000;
-
-				tmInyeccion->Tick += gcnew System::EventHandler(this, &Rareject::Tick_Increaser);
-
-				int Tiempo_Restante = Opc_Av->Tiempo_Segundos;
+				Tiempo_Restante = Opc_Av->Tiempo_Segundos;
 
 				tmInyeccion->Start();
+
 
 			} else {
 
 				Inyectar();
 
-				if (Opc_Av && Opc_Av->cbCloseOnInject->Checked) {
-
-					this->Close();
-
-				}
+				CloseOnInject();
 
 			}
 
@@ -520,24 +517,20 @@ namespace RarejectGUI {
 
 		Tiempo_Transcurrido++;
 
+		lblTiempoEspera->Text = Convert::ToString(Tiempo_Restante - Tiempo_Transcurrido);
+
 		if (Tiempo_Transcurrido == Opc_Av->Tiempo_Segundos) {
 
 			tmInyeccion->Stop();
 
 			Inyectar();
 
-			if (Opc_Av && Opc_Av->cbCloseOnInject->Checked) {
+			CloseOnInject();
 
-				this->Close();
-
-			}
-			else {
-
-				Opc_Av->Tiempo_Segundos = 0;
-				lblTiempoEspera->Text = Convert::ToString(0);
-				lblTiempoEspera->ForeColor = Color::Yellow;
-
-			}
+			Opc_Av->Tiempo_Segundos = 0;
+			lblTiempoEspera->Text = "0";
+			Tiempo_Transcurrido = 0;
+			lblTiempoEspera->ForeColor = Color::Yellow;
 
 		}
 
@@ -562,5 +555,15 @@ namespace RarejectGUI {
 
 	}
 
+
+	private: System::Void CloseOnInject() {
+
+		if (Opc_Av && Opc_Av->cbCloseOnInject->Checked) {
+
+			this->Close();
+			
+		}
+
+	}
 };
 }
