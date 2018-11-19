@@ -297,9 +297,13 @@ namespace RarejectGUI {
 				}
 
 				listaProcesos->Items->Add(processinfo);
+
+				CloseHandle(proceso);
 			}
-			
+
+			CloseHandle(hSnapShot);
 			updateHorizontalScrollbar();
+
 		}
 
 		private: System::Void VentanaProcesos_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {

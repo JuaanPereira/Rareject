@@ -51,7 +51,10 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::Button^  btnAcercaDe;
 	private: System::Windows::Forms::Button^  btnModulos;
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
+
+
 	private: System::Windows::Forms::Timer^  tmInyeccion;
+
 	private: System::ComponentModel::IContainer^  components;
 	private: bool currentCheckState = false;
 	private: bool currentCBTimerState = false;
@@ -445,14 +448,14 @@ namespace RarejectGUI {
 			MessageBox::Show("No se ha seleccionado el proceso previamente", "Falta el PID", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 
 		}
-		else {
 
-			/* Ventanita de error ya que en este caso no habría ningún proceso existente. (En nuestro caso no hace
-			falta, ya que gracias a la opción de escoger un proceso de la lista de procesos, siempre escogeremos un
-			proceso existente)*/
-			MessageBox::Show(("No existe  ningún proceso con PID " + PID), "No existe el proceso", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+		/*else {
 
-		}
+			Esto ya no sirve para nada, está parcheado.
+
+			MessageBox::Show(("Error en la selección del proceso..."), "Error catastrófico", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+
+		}*/
 
 	}
 

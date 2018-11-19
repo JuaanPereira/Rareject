@@ -213,6 +213,8 @@ namespace RarejectGUI {
 				c++;
 			}
 
+			CloseHandle(hSnapShot);
+
 		}
 	
 		private: System::Void VentanaModulos_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
