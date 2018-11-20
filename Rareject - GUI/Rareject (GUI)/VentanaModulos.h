@@ -25,9 +25,9 @@ namespace RarejectGUI {
 			InitializeComponent();
 		}
 		
-		VentanaModulos(DWORD PID)
+		VentanaModulos(DWORD PID, bool injecting)
 		{
-			InitializeComponent(PID);
+			InitializeComponent(PID, injecting);
 		}
 		
 	protected:
@@ -47,6 +47,7 @@ namespace RarejectGUI {
 	private: bool dragging;
 	private: Point offset;
 	public: System::Windows::Forms::Timer^  tmActualizarModulos;
+	public: bool injecting;
 	private: System::ComponentModel::IContainer^  components;
 
 
@@ -122,7 +123,7 @@ namespace RarejectGUI {
 
 		}
 		
-		void InitializeComponent(DWORD PID){
+		void InitializeComponent(DWORD PID, bool injecting){
 			
 			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(VentanaModulos::typeid));
@@ -167,9 +168,17 @@ namespace RarejectGUI {
 			// 
 			this->tmActualizarModulos->Interval = 3000;
 			this->tmActualizarModulos->Tick += gcnew System::EventHandler(this, &VentanaModulos::tmActualizarModulos_Tick);
-			// 
+			//
+			// PID
+			//
+			this->PID = PID;
+			//
+			// Injecting
+			//
+			this->injecting = injecting;
+			//
 			// VentanaModulos
-			// 
+			//
 			this->btnSalir->Click += gcnew System::EventHandler(this, &VentanaModulos::btnSalir_Click);
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
@@ -191,8 +200,8 @@ namespace RarejectGUI {
 			this->ResumeLayout(false);
 			this->Load += gcnew System::EventHandler(this, &VentanaModulos::VentanaModulos_Load);
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &VentanaModulos::VentanaModulos_FormClosing);
-			//PID
-			this->PID = PID;
+			
+
 			
 		}
 #pragma endregion
@@ -218,7 +227,10 @@ namespace RarejectGUI {
 			}
 
 			CloseHandle(hSnapShot);
-			tmActualizarModulos->Start();
+
+			if(!injecting)
+				tmActualizarModulos->Start();
+		
 
 		}
 	
@@ -281,8 +293,12 @@ namespace RarejectGUI {
 						}
 					}
 
-					if (!exists)
+					if (!exists) {
+
 						listaModulos->Items->Add(module);
+						listaModulos->TopIndex = listaModulos->Items->Count - 1;
+
+					}
 				}
 				c++;
 			}

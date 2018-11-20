@@ -72,6 +72,7 @@ namespace RarejectGUI {
 	private: HANDLE Proceso;
 	private: const char *NOMBRE_DLL;
 	private: int Tiempo_Restante, Tiempo_Transcurrido;
+	private: bool injecting;
 
 
 	void InitializeComponent(void)
@@ -290,6 +291,10 @@ namespace RarejectGUI {
 		// 
 		this->tmInyeccion->Interval = 1000;
 		this->tmInyeccion->Tick += gcnew System::EventHandler(this, &Rareject::Tick_Increaser);
+		//
+		// injecting
+		//
+		this->injecting = false;
 		// 
 		// Rareject
 		// 
@@ -441,7 +446,6 @@ namespace RarejectGUI {
 	}
 
 	private: System::Void btnInyectar_Click(System::Object^  sender, System::EventArgs^  e) {
-
 		//Convertimos las variables a los tipos necesarios a partir de las labels de la interfaz
 		marshal_context^ context = gcnew marshal_context();
 		DWORD PID = txtPID->Text->Equals("") ? -1 : System::Convert::ToInt32(txtPID->Text);
@@ -450,6 +454,7 @@ namespace RarejectGUI {
 		Proceso = OpenProcess(PROCESS_ALL_ACCESS, false, PID);
 
 		if (Proceso && !txtRuta->Text->Equals("") && PID != -1) {
+			injecting = true;
 
 			if (Opc_Av && Opc_Av->Tiempo_Segundos > 0) {
 
@@ -459,8 +464,9 @@ namespace RarejectGUI {
 
 				Tiempo_Restante = Opc_Av->Tiempo_Segundos;
 
-				if (Vent_Modulos)
+				if (Vent_Modulos) { //Detiene el timer de la ventana módulos para evitar problemas en la inyección
 					Vent_Modulos->tmActualizarModulos->Stop();
+				}
 
 				tmInyeccion->Start();
 
@@ -512,9 +518,8 @@ namespace RarejectGUI {
 
 			DWORD PID = System::Convert::ToInt32(txtPID->Text);
 
-			Vent_Modulos = gcnew VentanaModulos(PID);
-
-			Vent_Modulos->Show();
+			Vent_Modulos = gcnew VentanaModulos(PID, injecting);
+			Vent_Modulos->ShowDialog();
 
 		}
 	}
@@ -577,7 +582,7 @@ namespace RarejectGUI {
 			Tiempo_Transcurrido = 0;
 			lblTiempoEspera->ForeColor = Color::Yellow;
 
-			if (Vent_Modulos->Visible)
+			if (Vent_Modulos->Visible) //Reinicia el timer tras la inyección
 				Vent_Modulos->tmActualizarModulos->Start();
 
 		}
@@ -601,6 +606,8 @@ namespace RarejectGUI {
 		CloseHandle(HiloRemoto);
 		CloseHandle(Proceso);
 
+		injecting = false;
+			
 	}
 
 
