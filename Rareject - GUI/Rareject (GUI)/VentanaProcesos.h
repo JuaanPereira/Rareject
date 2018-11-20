@@ -341,7 +341,7 @@ namespace RarejectGUI {
 			
 			int index = 0;
 			int stringLength = 0;
-			for (int i = 0; i < listaProcesos->Items->Count - 1; i++) {
+			for (int i = 0; i < listaProcesos->Items->Count; i++) {
 				if (listaProcesos->Items[i]->ToString()->Length > stringLength) {
 					index = i;
 					stringLength = listaProcesos->Items[i]->ToString()->Length;

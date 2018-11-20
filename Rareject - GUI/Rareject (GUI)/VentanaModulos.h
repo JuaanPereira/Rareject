@@ -40,34 +40,26 @@ namespace RarejectGUI {
 		}
 
 	private: System::Windows::Forms::ListBox^  listaModulos;
-			 DWORD PID;
-			 String^ ProcessName;
+	private: DWORD PID;
+	private: String^ ProcessName;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::Button^  btnSalir;
 	private: bool dragging;
 	private: Point offset;
-	protected:
+	public: System::Windows::Forms::Timer^  tmActualizarModulos;
+	private: System::ComponentModel::IContainer^  components;
 
-	protected:
-
-	protected:
-
-	protected:
-
-	protected:
-
-	private:
-
-		System::ComponentModel::Container ^components;
 
 #pragma region Windows Form Designer generated code
 
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(VentanaModulos::typeid));
 			this->listaModulos = (gcnew System::Windows::Forms::ListBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->btnSalir = (gcnew System::Windows::Forms::Button());
+			this->tmActualizarModulos = (gcnew System::Windows::Forms::Timer(this->components));
 			this->SuspendLayout();
 			// 
 			// listaModulos
@@ -102,6 +94,11 @@ namespace RarejectGUI {
 			this->btnSalir->UseVisualStyleBackColor = false;
 			this->btnSalir->Click += gcnew System::EventHandler(this, &VentanaModulos::btnSalir_Click);
 			// 
+			// tmActualizarModulos
+			// 
+			this->tmActualizarModulos->Interval = 3000;
+			this->tmActualizarModulos->Tick += gcnew System::EventHandler(this, &VentanaModulos::tmActualizarModulos_Tick);
+			// 
 			// VentanaModulos
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -126,11 +123,13 @@ namespace RarejectGUI {
 		}
 		
 		void InitializeComponent(DWORD PID){
-
+			
+			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(VentanaModulos::typeid));
 			this->listaModulos = (gcnew System::Windows::Forms::ListBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->btnSalir = (gcnew System::Windows::Forms::Button());
+			this->tmActualizarModulos = (gcnew System::Windows::Forms::Timer(this->components));
 			this->SuspendLayout();
 			// 
 			// listaModulos
@@ -162,7 +161,12 @@ namespace RarejectGUI {
 			this->btnSalir->Size = System::Drawing::Size(105, 23);
 			this->btnSalir->TabIndex = 2;
 			this->btnSalir->Text = L"Finalizar";
-			this->btnSalir->UseVisualStyleBackColor = false;		
+			this->btnSalir->UseVisualStyleBackColor = false;
+			// 
+			// tmActualizarModulos
+			// 
+			this->tmActualizarModulos->Interval = 3000;
+			this->tmActualizarModulos->Tick += gcnew System::EventHandler(this, &VentanaModulos::tmActualizarModulos_Tick);
 			// 
 			// VentanaModulos
 			// 
@@ -207,18 +211,19 @@ namespace RarejectGUI {
 				String^ moduleName = gcnew String(moduleInfo->szModule);
 				String^ module = String::Format("{0:X8} - {1}", baseAddress, moduleName);
 				
-				if(c > 0)
+				if(c > 0) //Evita que se muestre el nombre del propio proceso
 					listaModulos->Items->Add(module);
 
 				c++;
 			}
 
 			CloseHandle(hSnapShot);
+			tmActualizarModulos->Start();
 
 		}
 	
 		private: System::Void VentanaModulos_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
-
+			tmActualizarModulos->Stop();
 			listaModulos->Items->Clear();
 
 		}
@@ -254,5 +259,36 @@ namespace RarejectGUI {
 			this->Close();
 
 		}
-};
+
+		private: System::Void tmActualizarModulos_Tick(System::Object^  sender, System::EventArgs^  e) {
+
+			HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, this->PID); //Creamos snapshot de los módulos del proceso
+			MODULEENTRY32* moduleInfo = new MODULEENTRY32;
+
+			moduleInfo->dwSize = sizeof(MODULEENTRY32);
+
+			byte c = 0;
+			while (Module32Next(hSnapShot, moduleInfo)) {
+				bool exists = false;
+				UInt64^ baseAddress = (UInt64)moduleInfo->modBaseAddr;
+				String^ moduleName = gcnew String(moduleInfo->szModule);
+				String^ module = String::Format("{0:X8} - {1}", baseAddress, moduleName);
+
+				if (c > 0) { //No tiene en cuenta el propio módulo
+					for (int i = 0; i < listaModulos->Items->Count; i++) {
+						if (listaModulos->Items[i]->ToString()->Substring(0,8) == String::Format("{0:X8}", baseAddress)) {
+							exists = true;
+						}
+					}
+
+					if (!exists)
+						listaModulos->Items->Add(module);
+				}
+				c++;
+			}
+
+			CloseHandle(hSnapShot);
+
+		}
+	};
 }

@@ -53,7 +53,7 @@ namespace RarejectGUI {
 
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::Label^  lblCloseInject;
-	private: System::Windows::Forms::Label^  lblTimerStatus;
+	public: System::Windows::Forms::Label^  lblTimerStatus;
 	private: System::Windows::Forms::Label^  lblTiempoEspera;
 	private: System::Windows::Forms::Button^  btnAcercaDe;
 	private: System::Windows::Forms::Button^  btnInyectar;
@@ -344,27 +344,17 @@ namespace RarejectGUI {
 
 	private: System::Void btnProcesos_Click(System::Object^  sender, System::EventArgs^  e) {
 
-		tmInyeccion->Stop(); //Detiene el timer si se estaba ejecutando
-		Tiempo_Transcurrido = 0; //Reinicia el contador del timer
+		if (Opc_Av && Opc_Av->cbInjectionTimer->Checked) { //Muestra el valor de retardo en el label asociado al timer si el checkbox está activado
 
-		if (Opc_Av->cbInjectionTimer->Checked) { //Muestra el valor de retardo en el label asociado al timer si el checkbox está activado
-
+			tmInyeccion->Stop(); //Detiene el timer si se estaba ejecutando
+			Tiempo_Transcurrido = 0; //Reinicia el contador del timer
+			lblTimerStatus->Text = "- Esperar (segundos):";
+			lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
 			lblTiempoEspera->Text = System::Convert::ToString(Opc_Av->Tiempo_Segundos);
-
-			if (lblTiempoEspera->Text == "0") { //Se muestra el valor en amarillo si es 0
-
-				lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
-
-			} else { //Si no se muestra en verde
-
-				lblTiempoEspera->ForeColor = System::Drawing::Color::Green;
-
-			}
 
 		} else { //Reinicia el formato y valor si el checkbox del timer está desactivado
 
 			lblTiempoEspera->Text = "0";
-			lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
 
 		}
 		
@@ -374,27 +364,18 @@ namespace RarejectGUI {
 
 	private: System::Void btnBuscar_Click(System::Object^  sender, System::EventArgs^  e) {
 
-		tmInyeccion->Stop(); //Detiene el timer si se estaba ejecutando
-		Tiempo_Transcurrido = 0; //Reinicia el contador del timer
-
-		if (Opc_Av->cbInjectionTimer->Checked) { //Muestra el valor de retardo en el label asociado al timer si el checkbox está activado
+		if (Opc_Av && Opc_Av->cbInjectionTimer->Checked) { //Muestra el valor de retardo en el label asociado al timer si el checkbox está activado
 
 			lblTiempoEspera->Text = System::Convert::ToString(Opc_Av->Tiempo_Segundos);
+			tmInyeccion->Stop(); //Detiene el timer si se estaba ejecutando
+			Tiempo_Transcurrido = 0; //Reinicia el contador del timer
+			lblTimerStatus->Text = "- Esperar (segundos):";
+			lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
 
-			if (lblTiempoEspera->Text == "0") { //Se muestra el valor en amarillo si es 0
-
-				lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
-
-			}else { //Si no se muestra en verde
-
-				lblTiempoEspera->ForeColor = System::Drawing::Color::Green;
-
-			}
-
+	
 		}else { //Reinicia el formato y valor si el checkbox del timer está desactivado
 
 			lblTiempoEspera->Text = "0";
-			lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
 
 		}
 
@@ -408,10 +389,15 @@ namespace RarejectGUI {
 	}
 
 	private: System::Void btnOpcionesAvanzadas_Click(System::Object^  sender, System::EventArgs^  e) {
+		
+		if (Opc_Av && Opc_Av->cbInjectionTimer->Checked) { //Se ejecuta sólo si se ha marcado la opción del timer
+			tmInyeccion->Stop(); //Detiene el timer si se estaba ejecutando
+			lblTimerStatus->Text = "- Esperar (segundos):"; //Restaura el valor del texto al original
+			Tiempo_Transcurrido = 0; //Reinicia el contador del timer
+			lblTiempoEspera->Text = System::Convert::ToString(Opc_Av->Tiempo_Segundos); //Restaura el tiempo seleccionado a su valor original
+			lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow; //Restaura el color al valor original
+		}
 
-		tmInyeccion->Stop(); //Detiene el timer si se estaba ejecutando
-		Tiempo_Transcurrido = 0; //Reinicia el contador del timer
-		lblTimerStatus->Text = "- Esperar (segundos):";
 		int currentTBTimerValue = System::Convert::ToInt32(lblTiempoEspera->Text); //Recibe el valor actual indicado al usuario para el tiempo que se tardará en inyectar la DLL
 
 		/*Inicializa la ventana de opciones avanzadas con los parámetros que teníamos previamente, como el estado de los checkbox de "Cerrar tras inyectar" o
@@ -422,6 +408,7 @@ namespace RarejectGUI {
 		//Almacena los valores de los checkbox tras cerrar la ventana de opciones avanzadas
 		currentCheckState = Opc_Av->currentState;
 		currentCBTimerState = Opc_Av->currentCBTimerState;
+
 
 		if (Opc_Av->cbCloseOnInject->Checked) { //Muestra la palabra ACTIVO en verde si el checkbox de "Cerrar tras inyectar" está activado
 
@@ -441,17 +428,7 @@ namespace RarejectGUI {
 		if (Opc_Av->cbInjectionTimer->Checked) { //Muestra el valor de retardo en el label asociado al timer si el checkbox está activado
 
 			lblTiempoEspera->Text = System::Convert::ToString(Opc_Av->Tiempo_Segundos);
-
-			if (lblTiempoEspera->Text == "0") { //Se muestra el valor en amarillo si es 0
-
-				lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
-
-			}
-			else { //Si no se muestra en verde
-
-				lblTiempoEspera->ForeColor = System::Drawing::Color::Green;
-
-			}
+			lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
 
 		}
 		else { //Reinicia el formato y valor si el checkbox del timer está desactivado
@@ -478,7 +455,12 @@ namespace RarejectGUI {
 
 				lblTimerStatus->Text = "- Tiempo restante:";
 
+				lblTiempoEspera->ForeColor = System::Drawing::Color::Green;
+
 				Tiempo_Restante = Opc_Av->Tiempo_Segundos;
+
+				if (Vent_Modulos)
+					Vent_Modulos->tmActualizarModulos->Stop();
 
 				tmInyeccion->Start();
 
@@ -532,7 +514,7 @@ namespace RarejectGUI {
 
 			Vent_Modulos = gcnew VentanaModulos(PID);
 
-			Vent_Modulos->ShowDialog();
+			Vent_Modulos->Show();
 
 		}
 	}
@@ -589,10 +571,14 @@ namespace RarejectGUI {
 
 			CloseOnInject();
 
+			
 			Opc_Av->Tiempo_Segundos = 0;
 			lblTiempoEspera->Text = "0";
 			Tiempo_Transcurrido = 0;
 			lblTiempoEspera->ForeColor = Color::Yellow;
+
+			if (Vent_Modulos->Visible)
+				Vent_Modulos->tmActualizarModulos->Start();
 
 		}
 
