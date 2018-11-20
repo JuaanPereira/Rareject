@@ -67,12 +67,13 @@ namespace RarejectGUI {
 	private: System::ComponentModel::IContainer^  components;
 	private: bool currentCheckState = false;
 	private: bool currentCBTimerState = false;
+	private: bool injecting = false;
 	private: Point offset;
 	private: bool dragging;
 	private: HANDLE Proceso;
 	private: const char *NOMBRE_DLL;
 	private: int Tiempo_Restante, Tiempo_Transcurrido;
-	private: bool injecting;
+
 
 
 	void InitializeComponent(void)
@@ -291,10 +292,6 @@ namespace RarejectGUI {
 		// 
 		this->tmInyeccion->Interval = 1000;
 		this->tmInyeccion->Tick += gcnew System::EventHandler(this, &Rareject::Tick_Increaser);
-		//
-		// injecting
-		//
-		this->injecting = false;
 		// 
 		// Rareject
 		// 
