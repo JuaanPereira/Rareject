@@ -5,6 +5,9 @@
 #include "VentanaAcercaDe.h"
 #include "VentanaModulos.h"
 #include <msclr\marshal.h>
+#include <iostream>
+#include <fstream>
+#include <cstdio>
 
 namespace RarejectGUI {
 	
@@ -15,6 +18,7 @@ namespace RarejectGUI {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace msclr::interop;
+	using namespace std;
 
 	public ref class Rareject : public System::Windows::Forms::Form
 	{
@@ -42,29 +46,20 @@ namespace RarejectGUI {
 	private: System::Windows::Forms::TextBox^  txtRuta;
 	private: System::Windows::Forms::Button^  btnProcesos;
 	private: System::Windows::Forms::Button^  btnBuscar;
-
-
 	private: System::Windows::Forms::TextBox^  txtPID;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::Button^  btnCerrar;
-
 	private: System::Windows::Forms::Button^  btnModulos;
-
-
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::Label^  lblCloseInject;
 	public: System::Windows::Forms::Label^  lblTimerStatus;
 	private: System::Windows::Forms::Label^  lblTiempoEspera;
 	private: System::Windows::Forms::Button^  btnAcercaDe;
 	private: System::Windows::Forms::Button^  btnInyectar;
-
-
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
-
-
 	private: System::Windows::Forms::Timer^  tmInyeccion;
-
 	private: System::ComponentModel::IContainer^  components;
+	private: Windows::Forms::DialogResult Result;
 	private: bool currentCheckState = false;
 	private: bool currentCBTimerState = false;
 	private: bool injecting = false;
@@ -72,8 +67,7 @@ namespace RarejectGUI {
 	private: bool dragging;
 	private: HANDLE Proceso;
 	private: const char *NOMBRE_DLL;
-	private: int Tiempo_Restante, Tiempo_Transcurrido;
-
+	private: int Tiempo_Restante, Tiempo_Transcurrido, Tiempo_Rec, currentTBTimerValue;
 
 
 	void InitializeComponent(void)
@@ -338,6 +332,7 @@ namespace RarejectGUI {
 	VentanaAcercaDe ^ Vent_Acerca;
 	VentanaModulos ^ Vent_Modulos;
 
+
 	private: System::Void Rareject_Load(System::Object^  sender, System::EventArgs^  e) {
 
 		Vent_Proc = gcnew VentanaProcesos(txtPID);
@@ -391,52 +386,29 @@ namespace RarejectGUI {
 	}
 
 	private: System::Void btnOpcionesAvanzadas_Click(System::Object^  sender, System::EventArgs^  e) {
-		
-		if (Opc_Av && Opc_Av->cbInjectionTimer->Checked) { //Se ejecuta sólo si se ha marcado la opción del timer
-			tmInyeccion->Stop(); //Detiene el timer si se estaba ejecutando
-			lblTimerStatus->Text = "- Esperar (segundos):"; //Restaura el valor del texto al original
-			Tiempo_Transcurrido = 0; //Reinicia el contador del timer
-			lblTiempoEspera->Text = System::Convert::ToString(Opc_Av->Tiempo_Segundos); //Restaura el tiempo seleccionado a su valor original
-			lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow; //Restaura el color al valor original
-		}
 
-		int currentTBTimerValue = System::Convert::ToInt32(lblTiempoEspera->Text); //Recibe el valor actual indicado al usuario para el tiempo que se tardará en inyectar la DLL
+		ifstream Archivo_Conf_Existe("config.txt");
 
-		/*Inicializa la ventana de opciones avanzadas con los parámetros que teníamos previamente, como el estado de los checkbox de "Cerrar tras inyectar" o
-		"Injection Timer" así como el valor (segundos) del slider y la TextBox que lo muestra*/
-		Opc_Av = gcnew VentanaOpcionesAvanzadas(currentCheckState, currentCBTimerState, currentTBTimerValue);
-		Opc_Av->ShowDialog(); //Muestra la ventana de opciones avanzadas
+		if (!Opc_Av && Archivo_Conf_Existe) {
 
-		//Almacena los valores de los checkbox tras cerrar la ventana de opciones avanzadas
-		currentCheckState = Opc_Av->currentState;
-		currentCBTimerState = Opc_Av->currentCBTimerState;
+			Result = MessageBox::Show("¿Cargar la última configuración utilizada?", "Información", MessageBoxButtons::YesNoCancel, MessageBoxIcon::Information);
 
+			if (Result == System::Windows::Forms::DialogResult::Yes) {
 
-		if (Opc_Av->cbCloseOnInject->Checked) { //Muestra la palabra ACTIVO en verde si el checkbox de "Cerrar tras inyectar" está activado
+				CargarArchivoConf();
 
-			lblCloseInject->Text = "ACTIVO";
-			lblCloseInject->ForeColor = System::Drawing::Color::Green;
+				Opciones_Avanzadas();
 
+			}
+			else if (Result == System::Windows::Forms::DialogResult::No) {
 
-		}
-		else { //Muestra la palabra INACTIVO en amarillo si el checkbox está desactivado
+				Opciones_Avanzadas();
 
-			lblCloseInject->Text = "INACTIVO";
-			lblCloseInject->ForeColor = System::Drawing::Color::Yellow;
+			}
 
+		} else {
 
-		}
-
-		if (Opc_Av->cbInjectionTimer->Checked) { //Muestra el valor de retardo en el label asociado al timer si el checkbox está activado
-
-			lblTiempoEspera->Text = System::Convert::ToString(Opc_Av->Tiempo_Segundos);
-			lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
-
-		}
-		else { //Reinicia el formato y valor si el checkbox del timer está desactivado
-
-			lblTiempoEspera->Text = "0";
-			lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
+			Opciones_Avanzadas();
 
 		}
 
@@ -523,6 +495,8 @@ namespace RarejectGUI {
 
 	private: System::Void btnCerrar_Click(System::Object^  sender, System::EventArgs^  e) {
 
+		GuardarArchivoConf();
+
 		this->Close();
 
 	}
@@ -607,6 +581,54 @@ namespace RarejectGUI {
 			
 	}
 
+	private: System::Void Opciones_Avanzadas(){
+
+		if (Opc_Av && Opc_Av->cbInjectionTimer->Checked) { //Se ejecuta sólo si se ha marcado la opción del timer
+			tmInyeccion->Stop(); //Detiene el timer si se estaba ejecutando
+			lblTimerStatus->Text = "- Esperar (segundos):"; //Restaura el valor del texto al original
+			Tiempo_Transcurrido = 0; //Reinicia el contador del timer
+			lblTiempoEspera->Text = System::Convert::ToString(Opc_Av->Tiempo_Segundos); //Restaura el tiempo seleccionado a su valor original
+			lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow; //Restaura el color al valor original
+		}
+
+		currentTBTimerValue = System::Convert::ToInt32(lblTiempoEspera->Text); //Recibe el valor actual indicado al usuario para el tiempo que se tardará en inyectar la DLL
+		Opc_Av = gcnew VentanaOpcionesAvanzadas(currentCheckState, currentCBTimerState, currentTBTimerValue);
+		Opc_Av->ShowDialog();
+
+		//Almacena los valores de los checkbox tras cerrar la ventana de opciones avanzadas
+		currentCheckState = Opc_Av->currentState;
+		currentCBTimerState = Opc_Av->currentCBTimerState;
+
+
+		if (Opc_Av->cbCloseOnInject->Checked) { //Muestra la palabra ACTIVO en verde si el checkbox de "Cerrar tras inyectar" está activado
+
+			lblCloseInject->Text = "ACTIVO";
+			lblCloseInject->ForeColor = System::Drawing::Color::Green;
+
+		}
+
+		else { //Muestra la palabra INACTIVO en amarillo si el checkbox está desactivado
+
+			lblCloseInject->Text = "INACTIVO";
+			lblCloseInject->ForeColor = System::Drawing::Color::Yellow;
+
+		}
+
+		if (Opc_Av->cbInjectionTimer->Checked) { //Muestra el valor de retardo en el label asociado al timer si el checkbox está activado
+
+			lblTiempoEspera->Text = System::Convert::ToString(Opc_Av->Tiempo_Segundos);
+			lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
+			
+		}
+
+		else { //Reinicia el formato y valor si el checkbox del timer está desactivado
+
+			lblTiempoEspera->Text = "0";
+			lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow;
+
+		}
+
+	}
 
 	private: System::Void CloseOnInject() {
 
@@ -616,6 +638,82 @@ namespace RarejectGUI {
 			
 		}
 
+	}
+
+	private: System::Void CargarArchivoConf() {
+
+		ifstream Cargar_Archivo_Conf("config.txt");
+
+		string linea;
+		
+		bool CB_Timer_Rec, CB_CloseOnInject_Rec;
+
+		getline(Cargar_Archivo_Conf, linea);
+		CB_CloseOnInject_Rec = stoi(linea);
+
+		if (CB_CloseOnInject_Rec == 1) {
+
+			currentCheckState = true;
+
+		}
+
+		getline(Cargar_Archivo_Conf, linea);
+		CB_Timer_Rec = stoi(linea);
+
+		if (CB_Timer_Rec == 1) {
+
+			currentCBTimerState = true;
+
+		}
+
+		getline(Cargar_Archivo_Conf, linea);
+
+		String^ Tiempo_Espera_T = gcnew String(linea.c_str());
+
+		lblTiempoEspera->Text = Tiempo_Espera_T;
+
+	
+	}
+
+	private: System::Void GuardarArchivoConf() {
+		
+		ofstream Archivo_Configuracion;
+
+		if(Opc_Av){
+
+			String^ Path = gcnew String(getenv("APPDATA"));
+
+			marshal_context^ context = gcnew marshal_context();
+
+			const char* RUTA = context->marshal_as<const char*, String>(Path + "\\Rareject\\config.txt");
+
+			ifstream Comprobar_Existe(RUTA);
+
+			
+			if (Opc_Av->cbCloseOnInject->Checked || Opc_Av->cbInjectionTimer->Checked) {
+
+				CreateDirectory(context->marshal_as<const TCHAR*>(Path + "\\Rareject"), NULL);
+
+				Archivo_Configuracion.open(RUTA);
+
+				Archivo_Configuracion << currentCheckState << std::endl;
+				Archivo_Configuracion << currentCBTimerState << std::endl;
+				Archivo_Configuracion << Opc_Av->Tiempo_Segundos << std::endl;
+
+				Archivo_Configuracion.close();
+
+			}
+			else if(Comprobar_Existe){
+
+				Archivo_Configuracion.close();
+				Comprobar_Existe.close();
+				
+				remove(RUTA);
+		
+			}
+
+		}
+		
 	}
 };
 }
