@@ -5,6 +5,7 @@
 #include "VentanaAcercaDe.h"
 #include "VentanaModulos.h"
 #include <msclr\marshal.h>
+#include <msclr\marshal_cppstd.h>
 #include <iostream>
 #include <fstream>
 #include <cstdio>
@@ -64,7 +65,7 @@ namespace RarejectGUI {
 	private: bool currentCBTimerState = false;
 	private: bool injecting = false;
 	private: Point offset;
-	private: bool dragging;
+	private: bool dragging, hubo_carga = false;
 	private: HANDLE Proceso;
 	private: const char *NOMBRE_DLL;
 	private: int Tiempo_Restante, Tiempo_Transcurrido, Tiempo_Rec, currentTBTimerValue;
@@ -549,13 +550,11 @@ namespace RarejectGUI {
 
 			CloseOnInject();
 
-			
-			Opc_Av->Tiempo_Segundos = 0;
-			lblTiempoEspera->Text = "0";
+			lblTiempoEspera->Text = System::Convert::ToString(Tiempo_Rec);
 			Tiempo_Transcurrido = 0;
 			lblTiempoEspera->ForeColor = Color::Yellow;
 
-			if (Vent_Modulos->Visible) //Reinicia el timer tras la inyección
+			if (Vent_Modulos && Vent_Modulos->Visible)
 				Vent_Modulos->tmActualizarModulos->Start();
 
 		}
@@ -585,6 +584,31 @@ namespace RarejectGUI {
 
 	private: System::Void Opciones_Avanzadas(){
 
+		if (hubo_carga == true) {
+
+			currentTBTimerValue = Tiempo_Rec;
+
+			Tiempo_Rec = NULL;
+
+			hubo_carga = false;
+
+		}
+		else {
+
+
+			if (Opc_Av && Opc_Av->cbInjectionTimer->Checked) {
+
+				currentTBTimerValue = System::Convert::ToInt32(Opc_Av->txtSegundos->Text);
+
+			}
+			else {
+			
+				currentTBTimerValue = System::Convert::ToInt32(lblTiempoEspera->Text);
+
+			}
+
+		}
+
 		if (Opc_Av && Opc_Av->cbInjectionTimer->Checked) { //Se ejecuta sólo si se ha marcado la opción del timer
 			tmInyeccion->Stop(); //Detiene el timer si se estaba ejecutando
 			lblTimerStatus->Text = "- Esperar (segundos):"; //Restaura el valor del texto al original
@@ -593,7 +617,6 @@ namespace RarejectGUI {
 			lblTiempoEspera->ForeColor = System::Drawing::Color::Yellow; //Restaura el color al valor original
 		}
 
-		currentTBTimerValue = System::Convert::ToInt32(lblTiempoEspera->Text); //Recibe el valor actual indicado al usuario para el tiempo que se tardará en inyectar la DLL
 		Opc_Av = gcnew VentanaOpcionesAvanzadas(currentCheckState, currentCBTimerState, currentTBTimerValue);
 		Opc_Av->ShowDialog();
 
@@ -636,6 +659,8 @@ namespace RarejectGUI {
 
 		if (Opc_Av && Opc_Av->cbCloseOnInject->Checked) {
 
+			GuardarArchivoConf();
+
 			this->Close();
 			
 		}
@@ -657,7 +682,7 @@ namespace RarejectGUI {
 		getline(Cargar_Archivo_Conf, linea); 
 		getline(Cargar_Archivo_Conf, linea);
 
-		CB_CloseOnInject = linea.c_str();
+		CB_CloseOnInject = linea;
 
 		if (CB_CloseOnInject == "ACTIVO") {
 
@@ -674,7 +699,7 @@ namespace RarejectGUI {
 		getline(Cargar_Archivo_Conf, linea);
 		getline(Cargar_Archivo_Conf, linea);
 
-		CB_InjectionTimer = linea.c_str();
+		CB_InjectionTimer = linea;
 
 		if (CB_InjectionTimer == "ACTIVO") {
 
@@ -691,8 +716,9 @@ namespace RarejectGUI {
 		getline(Cargar_Archivo_Conf, linea);
 		getline(Cargar_Archivo_Conf, linea);
 
-		String^ Tiempo_Espera_T = gcnew String(linea.c_str());
-		lblTiempoEspera->Text = Tiempo_Espera_T;
+		Tiempo_Rec = stoi(linea);
+
+		hubo_carga = true;
 
 	}
 
@@ -706,7 +732,7 @@ namespace RarejectGUI {
 
 			marshal_context^ context = gcnew marshal_context();
 
-			const char* RUTA = context->marshal_as<const char*, String>(Path + "\\Rareject\\config.txt");
+			const char* RUTA = context->marshal_as<const char*, String>(Path + "\\Rareject\\config");
 
 			ifstream Comprobar_Existe(RUTA);
 			
@@ -716,7 +742,7 @@ namespace RarejectGUI {
 
 				Archivo_Configuracion.open(RUTA);
 				
-				string CB_CloseOnInject, CB_InjectionTimer;
+				string CB_CloseOnInject, CB_InjectionTimer, Timer_Value;
 
 				if (currentCheckState == 1) {
 
@@ -739,6 +765,8 @@ namespace RarejectGUI {
 
 				}
 
+				std::string Delay = context->marshal_as<std::string>(Opc_Av->txtSegundos->Text);
+
 				Archivo_Configuracion << "-------------------------------------------------" << std::endl;
 				Archivo_Configuracion << "PARÁMETROS DE CONFIGURACIÓN DE RAREJECT, NO TOCAR" << std::endl; 
 				Archivo_Configuracion << "-------------------------------------------------" << std::endl; 
@@ -750,7 +778,7 @@ namespace RarejectGUI {
 				Archivo_Configuracion << CB_InjectionTimer << std::endl;
 				Archivo_Configuracion << "" << std::endl;
 				Archivo_Configuracion << "[Injection Timer - Delay]"<< std::endl;
-				Archivo_Configuracion << Opc_Av->Tiempo_Segundos << std::endl;
+				Archivo_Configuracion << Delay << std::endl;
 
 				Archivo_Configuracion.close();
 
@@ -774,7 +802,7 @@ namespace RarejectGUI {
 
 		marshal_context^ context = gcnew marshal_context();
 
-		const char* RUTA = context->marshal_as<const char*, String>(Path + "\\Rareject\\config.txt");
+		const char* RUTA = context->marshal_as<const char*, String>(Path + "\\Rareject\\config");
 
 		return RUTA;
 	}
