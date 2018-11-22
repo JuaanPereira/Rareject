@@ -387,7 +387,9 @@ namespace RarejectGUI {
 
 	private: System::Void btnOpcionesAvanzadas_Click(System::Object^  sender, System::EventArgs^  e) {
 
-		ifstream Archivo_Conf_Existe("config.txt");
+		const char* Ruta_Archivo = Ruta_Marshalling();
+
+		ifstream Archivo_Conf_Existe(Ruta_Archivo);
 
 		if (!Opc_Av && Archivo_Conf_Existe) {
 
@@ -642,37 +644,56 @@ namespace RarejectGUI {
 
 	private: System::Void CargarArchivoConf() {
 
-		ifstream Cargar_Archivo_Conf("config.txt");
-
-		string linea;
+		const char* Ruta_Archivo = Ruta_Marshalling();
 		
-		bool CB_Timer_Rec, CB_CloseOnInject_Rec;
+		ifstream Cargar_Archivo_Conf(Ruta_Archivo);
 
+		string linea, CB_CloseOnInject, CB_InjectionTimer;
+		
+		getline(Cargar_Archivo_Conf, linea); 
+		getline(Cargar_Archivo_Conf, linea); 
 		getline(Cargar_Archivo_Conf, linea);
-		CB_CloseOnInject_Rec = stoi(linea);
+		getline(Cargar_Archivo_Conf, linea);
+		getline(Cargar_Archivo_Conf, linea); 
+		getline(Cargar_Archivo_Conf, linea);
 
-		if (CB_CloseOnInject_Rec == 1) {
+		CB_CloseOnInject = linea.c_str();
+
+		if (CB_CloseOnInject == "ACTIVO") {
 
 			currentCheckState = true;
 
 		}
+		else {
 
+			currentCheckState = false;
+
+		}
+
+		getline(Cargar_Archivo_Conf, linea); 
 		getline(Cargar_Archivo_Conf, linea);
-		CB_Timer_Rec = stoi(linea);
+		getline(Cargar_Archivo_Conf, linea);
 
-		if (CB_Timer_Rec == 1) {
+		CB_InjectionTimer = linea.c_str();
+
+		if (CB_InjectionTimer == "ACTIVO") {
 
 			currentCBTimerState = true;
 
 		}
+		else {
 
+			currentCBTimerState = false;
+
+		}
+
+		getline(Cargar_Archivo_Conf, linea);
+		getline(Cargar_Archivo_Conf, linea);
 		getline(Cargar_Archivo_Conf, linea);
 
 		String^ Tiempo_Espera_T = gcnew String(linea.c_str());
-
 		lblTiempoEspera->Text = Tiempo_Espera_T;
 
-	
 	}
 
 	private: System::Void GuardarArchivoConf() {
@@ -688,16 +709,47 @@ namespace RarejectGUI {
 			const char* RUTA = context->marshal_as<const char*, String>(Path + "\\Rareject\\config.txt");
 
 			ifstream Comprobar_Existe(RUTA);
-
 			
 			if (Opc_Av->cbCloseOnInject->Checked || Opc_Av->cbInjectionTimer->Checked) {
 
 				CreateDirectory(context->marshal_as<const TCHAR*>(Path + "\\Rareject"), NULL);
 
 				Archivo_Configuracion.open(RUTA);
+				
+				string CB_CloseOnInject, CB_InjectionTimer;
 
-				Archivo_Configuracion << currentCheckState << std::endl;
-				Archivo_Configuracion << currentCBTimerState << std::endl;
+				if (currentCheckState == 1) {
+
+					CB_CloseOnInject = "ACTIVO";
+				}
+				else {
+
+					CB_CloseOnInject = "INACTIVO";
+
+				}
+
+				if (currentCBTimerState == 1) {
+
+					CB_InjectionTimer = "ACTIVO";
+
+				}
+				else {
+
+					CB_InjectionTimer = "INACTIVO";
+
+				}
+
+				Archivo_Configuracion << "-------------------------------------------------" << std::endl;
+				Archivo_Configuracion << "PARÁMETROS DE CONFIGURACIÓN DE RAREJECT, NO TOCAR" << std::endl; 
+				Archivo_Configuracion << "-------------------------------------------------" << std::endl; 
+				Archivo_Configuracion << "" << std::endl;
+				Archivo_Configuracion << "[Close On Inject]" << std::endl; 
+				Archivo_Configuracion << CB_CloseOnInject  << std::endl; 
+				Archivo_Configuracion << "" << std::endl;
+				Archivo_Configuracion << "[Injection Timer]" << std::endl; 
+				Archivo_Configuracion << CB_InjectionTimer << std::endl;
+				Archivo_Configuracion << "" << std::endl;
+				Archivo_Configuracion << "[Injection Timer - Delay]"<< std::endl;
 				Archivo_Configuracion << Opc_Av->Tiempo_Segundos << std::endl;
 
 				Archivo_Configuracion.close();
@@ -714,6 +766,17 @@ namespace RarejectGUI {
 
 		}
 		
+	}
+
+	private: const char* Ruta_Marshalling() {
+
+		String^ Path = gcnew String(getenv("APPDATA"));
+
+		marshal_context^ context = gcnew marshal_context();
+
+		const char* RUTA = context->marshal_as<const char*, String>(Path + "\\Rareject\\config.txt");
+
+		return RUTA;
 	}
 };
 }
