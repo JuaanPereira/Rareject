@@ -19,7 +19,6 @@ namespace RarejectGUI {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace msclr::interop;
-	using namespace std;
 
 	public ref class Rareject : public System::Windows::Forms::Form
 	{
@@ -388,6 +387,8 @@ namespace RarejectGUI {
 
 	private: System::Void btnOpcionesAvanzadas_Click(System::Object^  sender, System::EventArgs^  e) {
 
+		using namespace std;
+
 		const char* Ruta_Archivo = Ruta_Marshalling();
 
 		ifstream Archivo_Conf_Existe(Ruta_Archivo);
@@ -669,6 +670,8 @@ namespace RarejectGUI {
 
 	private: System::Void CargarArchivoConf() {
 
+		using namespace std;
+
 		const char* Ruta_Archivo = Ruta_Marshalling();
 		
 		ifstream Cargar_Archivo_Conf(Ruta_Archivo);
@@ -724,6 +727,8 @@ namespace RarejectGUI {
 
 	private: System::Void GuardarArchivoConf() {
 		
+		using namespace std;
+
 		ofstream Archivo_Configuracion;
 
 		if(Opc_Av){

@@ -249,11 +249,20 @@ namespace RarejectGUI {
 			String^ process = listaProcesos->GetItemText(listaProcesos->SelectedItem) == "" ? listaProcesos->GetItemText(listaProcesos->Items[listaProcesos->Items->Count - 1]) : listaProcesos->GetItemText(listaProcesos->SelectedItem); //Asegura de que no se ha elegido un elemento vacío en la lista
 			array<String^>^ processinfo = process->Split(' ');	//Separa la información del proceso en varias cadenas de texto
 			
-			if (processinfo[1]->EndsWith(")")) {	//Modifica la visualización de la información del proceso
+			if (processinfo[1]->EndsWith(")")) {
+				//Modifica la visualización de la información del proceso
 				txtPID->Text = processinfo[1]->Substring(1, (processinfo[1]->Length - 2)) + " (" + processinfo[0] + ")";
+
 			} else {
+
 				txtPID->Text = processinfo[1]->Substring(1, (processinfo[1]->Length - 1)) + ".exe (" + processinfo[0] + ")";
+
 			}
+
+
+
+
+
 			
 			processID = System::Convert::ToInt32(processinfo[0]);
 				
@@ -294,6 +303,11 @@ namespace RarejectGUI {
 						processinfo = pid + " (" + name + ")" + " - 32 bits";
 					else
 						processinfo = pid + " (" + name + ")";
+				}
+				else {
+
+					processinfo = pid + " (" + name + ")";
+
 				}
 
 				listaProcesos->Items->Add(processinfo);
