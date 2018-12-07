@@ -289,7 +289,8 @@ namespace RarejectGUI {
 				if (c > 0) { //No tiene en cuenta el propio módulo
 					for (int i = 0; i < listaModulos->Items->Count; i++) {
 						String^ itemLista = listaModulos->Items[i]->ToString();
-						if (itemLista->Substring(0, 8) == String::Format("{0:X8}", baseAddress) || itemLista->Substring(0, 12) == String::Format("{0:X12}", baseAddress)) {
+						
+						if (itemLista->Split(' ')[0] == String::Format("{0:X8}", baseAddress)) {
 							exists = true;
 						}
 					}

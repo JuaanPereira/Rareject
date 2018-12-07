@@ -67,9 +67,6 @@
     <EmbeddedResource Include="VentanaModulos.resx">
       <Filter>Archivos de recursos</Filter>
     </EmbeddedResource>
-    <EmbeddedResource Include="InjectionTimer.resx">
-      <Filter>Archivos de recursos</Filter>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Rareject (GUI).rc">

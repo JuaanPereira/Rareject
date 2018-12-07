@@ -260,10 +260,6 @@ namespace RarejectGUI {
 			}
 
 
-
-
-
-			
 			processID = System::Convert::ToInt32(processinfo[0]);
 				
 			Proceso_Elegido = true;
