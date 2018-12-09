@@ -284,8 +284,7 @@ namespace RarejectGUI {
 			processInfo->dwSize = sizeof(PROCESSENTRY32);
 			Process32Next(hSnapShot, processInfo);	//Se salta el primer proceso
 
-			while (Process32Next(hSnapShot, processInfo) != FALSE) {
-				typedef BOOL(WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
+			while (Process32Next(hSnapShot, processInfo)) {
 				int pid = processInfo->th32ProcessID;
 
 				HANDLE proceso = OpenProcess(PROCESS_QUERY_INFORMATION, false, pid);
@@ -301,9 +300,7 @@ namespace RarejectGUI {
 						processinfo = pid + " (" + name + ")";
 				}
 				else {
-
 					processinfo = pid + " (" + name + ")";
-
 				}
 
 				listaProcesos->Items->Add(processinfo);
